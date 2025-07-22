@@ -11,6 +11,6 @@ pipeline.enable_xformers_memory_efficient_attention()
 
 init_image = load_image("frame_0000.png")
 
-prompt = "A realistic 4k photo of a car driving on a road."
+prompt = "Car driving on a road. 4k"
 image = pipeline(prompt, image=init_image).images[0]
 image.save("output.png")
