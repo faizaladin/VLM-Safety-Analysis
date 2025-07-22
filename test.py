@@ -18,3 +18,6 @@ prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
 # pass prompt and image to pipeline
 image = pipeline(prompt, image=init_image).images[0]
 make_image_grid([init_image, image], rows=1, cols=2)
+
+# save the generated image
+image.save("output.png")
