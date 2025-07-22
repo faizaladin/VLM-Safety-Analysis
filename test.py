@@ -10,10 +10,9 @@ pipeline.enable_model_cpu_offload()
 pipeline.enable_xformers_memory_efficient_attention()
 
 # prepare image
-url = "https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/diffusers/img2img-init.png"
-init_image = load_image(url)
+init_image = load_image("frame_0000.png")
 
-prompt = "Astronaut in a jungle, cold color palette, muted colors, detailed, 8k"
+prompt = "Make this image more photorealistic"
 
 # pass prompt and image to pipeline
 image = pipeline(prompt, image=init_image).images[0]
