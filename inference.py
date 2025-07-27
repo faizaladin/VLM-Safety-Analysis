@@ -27,6 +27,6 @@ inputs = processor.apply_chat_template(
 ).to(model.device, torch.float16)
 
 # Generate
-generate_ids = model.generate(**inputs, max_new_tokens=30)
+generate_ids = model.generate(**inputs, max_new_tokens=100)
 output = processor.batch_decode(generate_ids, skip_special_tokens=True)
 print(output)
