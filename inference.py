@@ -6,7 +6,7 @@ from PIL import Image
 model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf", torch_dtype=torch.float16, device_map="auto")
 processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
 image1 = Image.open("paired_fail_4k.png")
-image2 = Image.open("success_fail_4k.png")
+image2 = Image.open("paired_success_4k.png")
 
 
 conversation = [
