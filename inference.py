@@ -28,4 +28,5 @@ inputs = processor.apply_chat_template(
 
 # Generate
 generate_ids = model.generate(**inputs, max_new_tokens=30)
-processor.batch_decode(generate_ids, skip_special_tokens=True)
+output = processor.batch_decode(generate_ids, skip_special_tokens=True)
+print(output)
