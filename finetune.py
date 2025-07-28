@@ -209,16 +209,17 @@ for epoch in range(num_epochs):
     running_loss = 0.0
     count = 0
     epoch_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc=f"Epoch {epoch+1}")
-    for batch_idx, batch in epoch_bar:
-        input_ids = batch["input_ids"]
-        attention_mask = batch["attention_mask"]
-        labels = batch["labels"]
-        # Move tensors to GPU if available
-        if torch.cuda.is_available():
-            input_ids = input_ids.cuda()
-            attention_mask = attention_mask.cuda()
-            labels = labels.cuda()
-        optimizer.zero_grad()
+for batch_idx, batch in epoch_bar:
+    input_ids = batch["input_ids"]
+    attention_mask = batch["attention_mask"]
+    labels = batch["labels"]
+    # Move tensors to GPU if available
+    if torch.cuda.is_available():
+        input_ids = input_ids.cuda()
+        attention_mask = attention_mask.cuda()
+        labels = labels.cuda()
+    optimizer.zero_grad()
+    with torch.cuda.amp.autocast(enabled=torch.cuda.is_available()):
         outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         logits = outputs.logits
         # Custom loss logic
@@ -244,12 +245,14 @@ for epoch in range(num_epochs):
         loss = loss / input_ids.shape[0]
         if isinstance(loss, float):
             loss = torch.tensor(loss, requires_grad=True, device=device)
-        loss.backward()
-        optimizer.step()
-        running_loss += loss.item()
-        count += 1
-        if (batch_idx + 1) % 10 == 0:
-            epoch_bar.set_postfix({"loss": f"{running_loss/count:.4f}"})
+    loss.backward()
+    optimizer.step()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    running_loss += loss.item()
+    count += 1
+    if (batch_idx + 1) % 10 == 0:
+        epoch_bar.set_postfix({"loss": f"{running_loss/count:.4f}"})
     print(f"Epoch {epoch+1} finished. Avg loss: {running_loss/count:.4f}")
     val_acc = validate(model, val_loader, failure_embeddings)
     if val_acc > best_val_acc:
