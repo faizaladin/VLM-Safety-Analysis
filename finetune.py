@@ -134,6 +134,11 @@ def main():
         def on_epoch_end(self, args, state, control, **kwargs):
             print(f"Finished epoch {int(state.epoch)+1 if state.epoch is not None else '?'}.")
 
+    print("Trainable parameters (requires_grad=True):")
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print(name, param.shape)
+            
     print("Starting training...")
     trainer = Trainer(
         model=model,
