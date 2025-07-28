@@ -10,24 +10,30 @@ import random
 
 dataset = "llava_finetune.json"
 
-# Load model and processor
+
+print("Loading model and processor...")
 model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf", torch_dtype=torch.float16, device_map="auto")
 processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
 model.eval()
+print("Model and processor loaded.")
 
 
-# Load dataset
+
+print(f"Loading dataset from {dataset}...")
 with open(dataset) as f:
     data = json.load(f)
+print(f"Loaded {len(data)} samples.")
 
-# Shuffle and split into train/val (80/20)
+
+print("Shuffling and splitting dataset into train/val (80/20)...")
 random.seed(42)
 random.shuffle(data)
 split_idx = int(0.8 * len(data))
 train_data = data[:split_idx]
 val_data = data[split_idx:]
+print(f"Train set: {len(train_data)} samples, Val set: {len(val_data)} samples.")
 
-# Custom Dataset for LLaVA finetuning
+print("Creating custom Dataset objects...")
 class LlavaFinetuneDataset(Dataset):
     def __init__(self, data, processor):
         self.data = data
@@ -59,12 +65,18 @@ class LlavaFinetuneDataset(Dataset):
         # The label is a single int (0 or 1)
         return {"input_ids": inputs["input_ids"].squeeze(0), "attention_mask": inputs["attention_mask"].squeeze(0), "labels": torch.tensor(label, dtype=torch.long)}
 
+
 train_dataset = LlavaFinetuneDataset(train_data, processor)
 val_dataset = LlavaFinetuneDataset(val_data, processor)
+print("Custom Dataset objects created.")
 
 # Function to get image embedding from LLaVA vision tower
 def get_embedding(image_path, prompt):
-    image = Image.open(image_path).convert("RGB")
+    try:
+        image = Image.open(image_path).convert("RGB")
+    except Exception as e:
+        print(f"[get_embedding] Warning: Could not open image {image_path}: {e}")
+        return None
     # Only get pixel_values for vision_tower
     inputs = processor(images=image, text=prompt, return_tensors="pt").to(model.device, torch.float16)
     pixel_values = inputs["pixel_values"]
@@ -103,21 +115,27 @@ failure_embeddings = []
 success_embeddings = []
 failure_paths = []
 success_paths = []
-for entry in data:
+print(f"Embedding {len(data)} images...")
+for idx, entry in enumerate(data):
     img_path = entry["image"]
     label = entry["label"]
     prompt = entry["prompt"]
+    print(f"[{idx+1}/{len(data)}] Embedding: {img_path} with prompt: {prompt[:60]}{'...' if len(prompt) > 60 else ''}")
     emb = get_embedding(img_path, prompt)
+    if emb is None:
+        print(f"Warning: Skipping {img_path} due to invalid image.")
+        continue
     if label == 0:
         failure_embeddings.append(emb)
         failure_paths.append(img_path)
     else:
         success_embeddings.append(emb)
         success_paths.append(img_path)
+print("Finished embedding images.")
 
 
 
-# TrainingArguments for Hugging Face Trainer
+print("Setting up TrainingArguments...")
 training_args = TrainingArguments(
     output_dir="llava_finetuned_model",
     num_train_epochs=100,
@@ -134,6 +152,7 @@ training_args = TrainingArguments(
 )
 
 
+print("Defining metric computation and custom Trainer...")
 # Helper to decode model outputs to yes/no and map to 0/1
 def decode_and_map(pred_ids, processor):
     outputs = processor.batch_decode(pred_ids, skip_special_tokens=True)
@@ -205,6 +224,7 @@ class CustomTrainer(Trainer):
         loss = loss / count if count > 0 else torch.tensor(0.0, device=logits.device)
         return (loss, outputs) if return_outputs else loss
 
+print("Initializing Trainer...")
 trainer = CustomTrainer(
     model=model,
     args=training_args,
@@ -215,5 +235,8 @@ trainer = CustomTrainer(
 )
 
 # Train and save model
+print("Starting training...")
 trainer.train()
+print("Training complete. Saving model...")
 trainer.save_model("llava_finetuned_model")
+print("Model saved to llava_finetuned_model.")
