@@ -1,5 +1,4 @@
 
-
 import json
 import torch
 import numpy as np
@@ -7,14 +6,22 @@ from PIL import Image
 from transformers import LlavaForConditionalGeneration, AutoProcessor, Trainer, TrainingArguments
 from torch.utils.data import Dataset, random_split
 import random
+from tqdm import tqdm
 
 dataset = "llava_finetune.json"
+
 
 
 print("Loading model and processor...")
 model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf", torch_dtype=torch.float16, device_map="auto")
 processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
 model.eval()
+# Move model to GPU if available
+if torch.cuda.is_available():
+    model = model.cuda()
+    print("Model moved to CUDA (GPU).")
+else:
+    print("CUDA not available, using CPU.")
 print("Model and processor loaded.")
 
 
@@ -78,7 +85,12 @@ def get_embedding(image_path, prompt):
         print(f"[get_embedding] Warning: Could not open image {image_path}: {e}")
         return None
     # Only get pixel_values for vision_tower
-    inputs = processor(images=image, text=prompt, return_tensors="pt").to(model.device, torch.float16)
+    inputs = processor(images=image, text=prompt, return_tensors="pt")
+    # Move to GPU if available
+    if torch.cuda.is_available():
+        inputs = {k: v.cuda().half() if torch.is_tensor(v) else v for k, v in inputs.items()}
+    else:
+        inputs = {k: v.float() if torch.is_tensor(v) else v for k, v in inputs.items()}
     pixel_values = inputs["pixel_values"]
     with torch.no_grad():
         vision_outputs = model.vision_tower(pixel_values=pixel_values)
@@ -103,7 +115,12 @@ def get_llava_answer(image_path, prompt):
         tokenize=True,
         return_dict=True,
         return_tensors="pt"
-    ).to(model.device, torch.float16)
+    )
+    # Move to GPU if available
+    if torch.cuda.is_available():
+        inputs = {k: v.cuda().half() if torch.is_tensor(v) else v for k, v in inputs.items()}
+    else:
+        inputs = {k: v.float() if torch.is_tensor(v) else v for k, v in inputs.items()}
     with torch.no_grad():
         generate_ids = model.generate(**inputs, max_new_tokens=1000)
     output = processor.batch_decode(generate_ids, skip_special_tokens=True)[0]
@@ -116,14 +133,14 @@ success_embeddings = []
 failure_paths = []
 success_paths = []
 print(f"Embedding {len(data)} images...")
-for idx, entry in enumerate(data):
+for idx, entry in enumerate(tqdm(data, desc="Embedding images")):
     img_path = entry["image"]
     label = entry["label"]
     prompt = entry["prompt"]
-    print(f"[{idx+1}/{len(data)}] Embedding: {img_path} with prompt: {prompt[:60]}{'...' if len(prompt) > 60 else ''}")
+    # tqdm disables print, so only print warnings
     emb = get_embedding(img_path, prompt)
     if emb is None:
-        print(f"Warning: Skipping {img_path} due to invalid image.")
+        tqdm.write(f"Warning: Skipping {img_path} due to invalid image.")
         continue
     if label == 0:
         failure_embeddings.append(emb)
@@ -135,108 +152,109 @@ print("Finished embedding images.")
 
 
 
-print("Setting up TrainingArguments...")
-training_args = TrainingArguments(
-    output_dir="llava_finetuned_model",
-    num_train_epochs=100,
-    per_device_train_batch_size=1,
-    per_device_eval_batch_size=1,
-    learning_rate=1e-4,
-    evaluation_strategy="epoch",
-    save_strategy="epoch",
-    logging_strategy="epoch",
-    load_best_model_at_end=True,
-    metric_for_best_model="eval_loss",
-    greater_is_better=False,
-    report_to=[],
-)
+
+# --- Custom PyTorch Training Loop ---
+from torch.utils.data import DataLoader
+
+num_epochs = 100
+batch_size = 1
+learning_rate = 1e-4
+device = model.device
 
 
-print("Defining metric computation and custom Trainer...")
-# Helper to decode model outputs to yes/no and map to 0/1
-def decode_and_map(pred_ids, processor):
-    outputs = processor.batch_decode(pred_ids, skip_special_tokens=True)
+train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
+
+optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+
+def decode_and_map_logits(logits):
+    pred_ids = torch.argmax(logits, dim=-1)
     mapped = []
-    for out in outputs:
-        out = out.strip().lower()
-        if out.startswith("yes"):
+    for pred in pred_ids:
+        # This assumes output is [batch, seq] or [batch]
+        # For simplicity, treat as binary classification
+        # You may need to adjust this for your model's output
+        if pred.item() == 0:
             mapped.append(0)
-        elif out.startswith("no"):
+        elif pred.item() == 1:
             mapped.append(1)
         else:
-            # fallback: treat as incorrect
             mapped.append(-1)
     return np.array(mapped)
 
-def compute_metrics(eval_pred):
-    pred_ids, labels = eval_pred
-    preds = decode_and_map(pred_ids, processor)
-    # Only compare where mapping succeeded
-    valid = preds != -1
-    acc = (preds[valid] == labels[valid]).mean() if np.any(valid) else 0.0
-    return {"accuracy": acc}
+def validate(model, val_loader, failure_embeddings):
+    model.eval()
+    total = 0
+    correct = 0
+    with torch.no_grad():
+        for batch in val_loader:
+            input_ids = batch["input_ids"].to(device)
+            attention_mask = batch["attention_mask"].to(device)
+            labels = batch["labels"].to(device)
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
+            logits = outputs.logits
+            preds = decode_and_map_logits(logits)
+            labels_np = labels.cpu().numpy()
+            valid = preds != -1
+            total += np.sum(valid)
+            correct += np.sum(preds[valid] == labels_np[valid])
+    acc = correct / total if total > 0 else 0.0
+    print(f"Validation accuracy: {acc:.4f}")
+    return acc
 
-
-# Custom Trainer to use min distance to failure set as loss for misclassified successes
-class CustomTrainer(Trainer):
-    def __init__(self, *args, failure_embeddings=None, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.failure_embeddings = failure_embeddings
-
-    def compute_loss(self, model, inputs, return_outputs=False):
-        # Standard forward
-        outputs = model(
-            input_ids=inputs["input_ids"],
-            attention_mask=inputs["attention_mask"],
-            labels=inputs["labels"]
-        )
+print("Starting custom training loop...")
+best_val_acc = 0.0
+for epoch in range(num_epochs):
+    model.train()
+    running_loss = 0.0
+    count = 0
+    epoch_bar = tqdm(enumerate(train_loader), total=len(train_loader), desc=f"Epoch {epoch+1}")
+    for batch_idx, batch in epoch_bar:
+        input_ids = batch["input_ids"]
+        attention_mask = batch["attention_mask"]
+        labels = batch["labels"]
+        # Move tensors to GPU if available
+        if torch.cuda.is_available():
+            input_ids = input_ids.cuda()
+            attention_mask = attention_mask.cuda()
+            labels = labels.cuda()
+        optimizer.zero_grad()
+        outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
         logits = outputs.logits
-        # Decode model output to yes/no
-        pred_ids = torch.argmax(logits, dim=-1)
-        # Map to 0/1 as before
-        preds = pred_ids.detach().cpu().numpy()
-        labels = inputs["labels"].detach().cpu().numpy()
-        # Get embeddings for current batch
+        # Custom loss logic
+        pred_ids = torch.argmax(logits, dim=-1).cpu().numpy()
+        labels_np = labels.cpu().numpy()
         batch_embs = []
-        for i in range(inputs["input_ids"].shape[0]):
+        for i in range(input_ids.shape[0]):
             # Re-embed the image for this batch item
-            # (Assumes batch size 1 for simplicity)
-            img_idx = self.train_dataset.indices[i] if hasattr(self.train_dataset, 'indices') else i
-            img_path = self.train_dataset.data[img_idx]["image"]
-            prompt = self.train_dataset.data[img_idx]["prompt"]
+            img_idx = batch_idx * batch_size + i
+            img_path = train_dataset.data[img_idx]["image"]
+            prompt = train_dataset.data[img_idx]["prompt"]
             emb = get_embedding(img_path, prompt)
             batch_embs.append(emb)
         batch_embs = np.stack(batch_embs)
-        # Custom loss: for misclassified successes, use min distance to failure set
         loss = 0.0
-        count = 0
-        for i, (pred, label, emb) in enumerate(zip(preds, labels, batch_embs)):
+        for i, (pred, label, emb) in enumerate(zip(pred_ids, labels_np, batch_embs)):
             if label == 1 and pred == 0:
-                # Misclassified success, penalize by min distance to failure set
-                dists = [np.linalg.norm(emb - f_emb) for f_emb in self.failure_embeddings]
+                dists = [np.linalg.norm(emb - f_emb) for f_emb in failure_embeddings]
                 min_dist = min(dists) if dists else 0.0
-                loss += min_dist
-                count += 1
+                loss = loss + min_dist
             else:
-                # Standard cross-entropy for other cases
-                loss += torch.nn.functional.cross_entropy(logits[i].unsqueeze(0), torch.tensor([label], device=logits.device))
-                count += 1
-        loss = loss / count if count > 0 else torch.tensor(0.0, device=logits.device)
-        return (loss, outputs) if return_outputs else loss
-
-print("Initializing Trainer...")
-trainer = CustomTrainer(
-    model=model,
-    args=training_args,
-    train_dataset=train_dataset,
-    eval_dataset=val_dataset,
-    compute_metrics=compute_metrics,
-    failure_embeddings=failure_embeddings,
-)
-
-# Train and save model
-print("Starting training...")
-trainer.train()
-print("Training complete. Saving model...")
-trainer.save_model("llava_finetuned_model")
+                loss = loss + torch.nn.functional.cross_entropy(logits[i].unsqueeze(0), torch.tensor([label], device=logits.device))
+        loss = loss / input_ids.shape[0]
+        if isinstance(loss, float):
+            loss = torch.tensor(loss, requires_grad=True, device=device)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss.item()
+        count += 1
+        if (batch_idx + 1) % 10 == 0:
+            epoch_bar.set_postfix({"loss": f"{running_loss/count:.4f}"})
+    print(f"Epoch {epoch+1} finished. Avg loss: {running_loss/count:.4f}")
+    val_acc = validate(model, val_loader, failure_embeddings)
+    if val_acc > best_val_acc:
+        print("New best model found. Saving...")
+        model.save_pretrained("llava_finetuned_model")
+        best_val_acc = val_acc
+print("Training complete. Best validation accuracy: {:.4f}".format(best_val_acc))
 print("Model saved to llava_finetuned_model.")
