@@ -103,7 +103,9 @@ class LlavaJsonClassificationDataset(Dataset):
 def main():
     model_name = "llava-hf/llava-1.5-7b-hf"
     processor = AutoProcessor.from_pretrained(model_name)
+
     model = LlavaForConditionalGeneration.from_pretrained(model_name, torch_dtype=torch.float16)
+    model.gradient_checkpointing_enable()
     model = prepare_model_with_lora(model)
 
     dataset_path = dataset
@@ -121,7 +123,7 @@ def main():
         save_strategy="epoch",
         logging_dir="./logs",
         learning_rate=2e-4,
-        bf16=True,  # Use bfloat16 mixed precision if supported
+        fp16=True,  # Use float16 mixed precision
         report_to="none"
     )
 
