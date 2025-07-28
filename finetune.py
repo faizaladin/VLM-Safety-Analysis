@@ -65,10 +65,11 @@ val_dataset = LlavaFinetuneDataset(val_data, processor)
 # Function to get image embedding from LLaVA vision tower
 def get_embedding(image_path, prompt):
     image = Image.open(image_path).convert("RGB")
-    # Pass a dummy text input along with the image
+    # Only get pixel_values for vision_tower
     inputs = processor(images=image, text=prompt, return_tensors="pt").to(model.device, torch.float16)
+    pixel_values = inputs["pixel_values"]
     with torch.no_grad():
-        vision_outputs = model.vision_tower(**inputs)
+        vision_outputs = model.vision_tower(pixel_values=pixel_values)
         emb = vision_outputs.last_hidden_state.mean(dim=1).squeeze().cpu().numpy()
     return emb
 
