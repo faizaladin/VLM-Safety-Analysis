@@ -54,13 +54,19 @@ def prepare_model_with_lora(model):
 
 # Training setup
 def label_from_text(text):
-    first_word = text.strip().split()[0].lower()
-    if first_word == 'yes':
+    import re
+    print(f"Prompt for labeling: {text}")
+    text_lower = text.strip().lower()
+    # Match 'yes' or 'no' as a whole word, possibly followed by punctuation
+    if re.search(r'\byes\b[\.,!?:;]?', text_lower):
+        print("Label assigned: 1 (yes)")
         return 1
-    elif first_word == 'no':
+    elif re.search(r'\bno\b[\.,!?:;]?', text_lower):
+        print("Label assigned: 0 (no)")
         return 0
     else:
-        raise ValueError(f"Unknown label: {first_word}")
+        print("Label assigned: 0 (default, neither yes nor no found)")
+        return 0
 
 class LlavaJsonClassificationDataset(Dataset):
     def __init__(self, json_path, processor, max_length=128):
