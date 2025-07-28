@@ -154,13 +154,60 @@ def compute_metrics(eval_pred):
     acc = (preds[valid] == labels[valid]).mean() if np.any(valid) else 0.0
     return {"accuracy": acc}
 
-# Trainer
-trainer = Trainer(
+
+# Custom Trainer to use min distance to failure set as loss for misclassified successes
+class CustomTrainer(Trainer):
+    def __init__(self, *args, failure_embeddings=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.failure_embeddings = failure_embeddings
+
+    def compute_loss(self, model, inputs, return_outputs=False):
+        # Standard forward
+        outputs = model(
+            input_ids=inputs["input_ids"],
+            attention_mask=inputs["attention_mask"],
+            labels=inputs["labels"]
+        )
+        logits = outputs.logits
+        # Decode model output to yes/no
+        pred_ids = torch.argmax(logits, dim=-1)
+        # Map to 0/1 as before
+        preds = pred_ids.detach().cpu().numpy()
+        labels = inputs["labels"].detach().cpu().numpy()
+        # Get embeddings for current batch
+        batch_embs = []
+        for i in range(inputs["input_ids"].shape[0]):
+            # Re-embed the image for this batch item
+            # (Assumes batch size 1 for simplicity)
+            img_idx = self.train_dataset.indices[i] if hasattr(self.train_dataset, 'indices') else i
+            img_path = self.train_dataset.data[img_idx]["image"]
+            emb = get_embedding(img_path)
+            batch_embs.append(emb)
+        batch_embs = np.stack(batch_embs)
+        # Custom loss: for misclassified successes, use min distance to failure set
+        loss = 0.0
+        count = 0
+        for i, (pred, label, emb) in enumerate(zip(preds, labels, batch_embs)):
+            if label == 1 and pred == 0:
+                # Misclassified success, penalize by min distance to failure set
+                dists = [np.linalg.norm(emb - f_emb) for f_emb in self.failure_embeddings]
+                min_dist = min(dists) if dists else 0.0
+                loss += min_dist
+                count += 1
+            else:
+                # Standard cross-entropy for other cases
+                loss += torch.nn.functional.cross_entropy(logits[i].unsqueeze(0), torch.tensor([label], device=logits.device))
+                count += 1
+        loss = loss / count if count > 0 else torch.tensor(0.0, device=logits.device)
+        return (loss, outputs) if return_outputs else loss
+
+trainer = CustomTrainer(
     model=model,
     args=training_args,
     train_dataset=train_dataset,
     eval_dataset=val_dataset,
     compute_metrics=compute_metrics,
+    failure_embeddings=failure_embeddings,
 )
 
 # Train and save model
