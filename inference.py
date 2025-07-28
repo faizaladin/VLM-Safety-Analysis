@@ -3,9 +3,9 @@ from transformers import AutoProcessor, LlavaForConditionalGeneration
 from PIL import Image
 
 # Load the model in half-precision
-model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf", torch_dtype=torch.float16, device_map="auto")
-processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
-image = Image.open("paired_success_4k.png")
+model = LlavaForConditionalGeneration.from_pretrained("./finetuned_llava", torch_dtype=torch.float16)
+processor = AutoProcessor.from_pretrained("./finetuned_llava")
+image = Image.open("paired_frames/pos_-0.4000000000000003_head_25/frame_00011.png")
 
 
 conversation = [
