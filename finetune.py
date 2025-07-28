@@ -58,9 +58,9 @@ def label_from_text(text):
     text_lower = text.strip().lower()
     # Match 'yes' or 'no' as a whole word, possibly followed by punctuation
     if re.search(r'\byes\b[\.,!?:;]?', text_lower):
-        return 1
-    elif re.search(r'\bno\b[\.,!?:;]?', text_lower):
         return 0
+    elif re.search(r'\bno\b[\.,!?:;]?', text_lower):
+        return 1
     else:
         return 0
 
@@ -138,7 +138,7 @@ def main():
     for name, param in model.named_parameters():
         if param.requires_grad:
             print(name, param.shape)
-            
+
     print("Starting training...")
     trainer = Trainer(
         model=model,
