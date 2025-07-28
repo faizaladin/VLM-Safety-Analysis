@@ -28,6 +28,7 @@ model.eval()
 
 print("Configuring LoRA for memory-efficient finetuning (last 2 layers only)...")
 # Find the last 2 transformer layer indices for q_proj/v_proj
+
 layer_indices = []
 for n, _ in model.named_modules():
     if ".layers." in n and (n.endswith("q_proj") or n.endswith("v_proj")):
@@ -37,9 +38,10 @@ for n, _ in model.named_modules():
 layer_indices = sorted(layer_indices)
 last2 = layer_indices[-2:]
 target_modules = [
-    f"layers.{lid}.q_proj" for lid in last2
-] + [
-    f"layers.{lid}.v_proj" for lid in last2
+    rf"layers\\.{last2[0]}\\..*q_proj$",
+    rf"layers\\.{last2[1]}\\..*q_proj$",
+    rf"layers\\.{last2[0]}\\..*v_proj$",
+    rf"layers\\.{last2[1]}\\..*v_proj$"
 ]
 lora_config = LoraConfig(
     r=8, # rank
@@ -50,7 +52,7 @@ lora_config = LoraConfig(
     task_type=TaskType.CAUSAL_LM,
 )
 model = get_peft_model(model, lora_config)
-print(f"LoRA configuration applied to modules: {target_modules}")
+print(f"LoRA configuration applied to modules (regex): {target_modules}")
 
 # Move model to GPU if available
 if torch.cuda.is_available():
