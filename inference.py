@@ -46,7 +46,11 @@ inputs = processor.apply_chat_template(
 )
 for k, v in inputs.items():
     if isinstance(v, torch.Tensor):
-        inputs[k] = v.to(device, torch.float16)
+        # Only cast float tensors to float16, keep index tensors as Long
+        if v.dtype == torch.float:
+            inputs[k] = v.to(device, torch.float16)
+        else:
+            inputs[k] = v.to(device)
 
 # Generate
 generate_ids = model.generate(**inputs, max_new_tokens=50)
