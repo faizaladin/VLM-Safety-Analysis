@@ -114,12 +114,13 @@ def main():
         report_to="none"
     )
 
+    from transformers import TrainerCallback
 
-    class PrintCallback:
+    class PrintCallback(TrainerCallback):
         def on_epoch_begin(self, args, state, control, **kwargs):
-            print(f"\nStarting epoch {state.epoch+1 if state.epoch is not None else '?'}...")
+            print(f"\nStarting epoch {int(state.epoch)+1 if state.epoch is not None else '?'}...")
         def on_epoch_end(self, args, state, control, **kwargs):
-            print(f"Finished epoch {state.epoch+1 if state.epoch is not None else '?'}.")
+            print(f"Finished epoch {int(state.epoch)+1 if state.epoch is not None else '?'}.")
 
     print("Starting training...")
     trainer = Trainer(
