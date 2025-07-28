@@ -1,10 +1,21 @@
 import torch
 from transformers import AutoProcessor, LlavaForConditionalGeneration
 from PIL import Image
+from peft import PeftModel
 
-# Load the model in half-precision
-model = LlavaForConditionalGeneration.from_pretrained("./finetuned_llava", torch_dtype=torch.float16)
-processor = AutoProcessor.from_pretrained("./finetuned_llava", use_fast=True)
+# Path to your saved model directory
+model_dir = "./finetuned_llava"
+
+# Load processor
+processor = AutoProcessor.from_pretrained(model_dir)
+
+# Load base model
+base_model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf")
+
+# Load LoRA weights
+model = PeftModel.from_pretrained(base_model, model_dir)
+
+# Now use `model` and `processor` for inference
 image = Image.open("paired_frames/pos_-2.7755575615628914e-16_head_29/frame_00013.png")
 
 
