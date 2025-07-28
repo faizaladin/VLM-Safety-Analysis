@@ -146,8 +146,8 @@ def main():
 
     # Precompute failure set embeddings (from training set only)
     print("Precomputing failure set embeddings...")
-    # Use the raw dataset for access to image paths and text
-    failure_embs = precompute_failure_embeddings(model, processor, [full_dataset[i] for i in range(train_size)], device)
+    # Use the raw data dicts for access to image paths and text
+    failure_embs = precompute_failure_embeddings(model, processor, full_dataset.data[:train_size], device)
     print(f"Failure set size: {failure_embs.shape[0]}")
 
     training_args = TrainingArguments(
