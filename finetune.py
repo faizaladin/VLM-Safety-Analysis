@@ -75,7 +75,7 @@ class LlavaJsonClassificationDataset(Dataset):
     def __getitem__(self, idx):
         item = self.data[idx]
         image = Image.open(item['image']).convert('RGB')
-        text = item['text']
+        text = item['prompt']
         label = label_from_text(text)
         processed = self.processor(
             text=text,
