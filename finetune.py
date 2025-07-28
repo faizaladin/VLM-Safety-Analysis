@@ -1,4 +1,5 @@
 
+
 import json
 import torch
 import numpy as np
@@ -8,7 +9,15 @@ from torch.utils.data import Dataset, random_split
 import random
 from tqdm import tqdm
 
+# LoRA/PEFT imports
+try:
+    from peft import get_peft_model, LoraConfig, TaskType
+except ImportError:
+    print("peft not found. Please install with: pip install peft")
+    raise
+
 dataset = "llava_finetune.json"
+
 
 
 
@@ -16,6 +25,20 @@ print("Loading model and processor...")
 model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf", torch_dtype=torch.float16, device_map="auto")
 processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
 model.eval()
+
+# --- LoRA/PEFT setup ---
+print("Configuring LoRA for memory-efficient finetuning...")
+lora_config = LoraConfig(
+    r=8, # rank
+    lora_alpha=16,
+    target_modules=["q_proj", "v_proj"], # typical for LLaMA-based models
+    lora_dropout=0.05,
+    bias="none",
+    task_type=TaskType.CAUSAL_LM,
+)
+model = get_peft_model(model, lora_config)
+print("LoRA configuration applied.")
+
 # Move model to GPU if available
 if torch.cuda.is_available():
     model = model.cuda()
@@ -166,6 +189,10 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+print("Optimizer set to only update LoRA parameters:")
+for name, param in model.named_parameters():
+    if param.requires_grad:
+        print(f"  {name}")
 
 def decode_and_map_logits(logits):
     pred_ids = torch.argmax(logits, dim=-1)
