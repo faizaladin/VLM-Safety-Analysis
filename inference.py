@@ -10,10 +10,10 @@ model_dir = "./finetuned_llava"
 processor = AutoProcessor.from_pretrained(model_dir)
 
 # Load base model
-base_model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf")
+model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf")
 
-# Load LoRA weights
-model = PeftModel.from_pretrained(base_model, model_dir)
+# # Load LoRA weights
+# model = PeftModel.from_pretrained(base_model, model_dir)
 
 # Move model to GPU if available
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -21,14 +21,14 @@ print(device)
 model = model.to(device)
 
 # Now use `model` and `processor` for inference
-image = Image.open("paired_frames/pos_-0.2000000000000003_head_25/frame_00000.png")
+image = Image.open("paired_success_4k.png")
 
 conversation = [
     {
         "role": "user",
         "content": [
             {"type": "image", "image": image},
-            {"type": "text", "text": "This is a paired image of two cars using a vision based algorithm to steer under different weather conditions. Is there a cause of failure in this image, and if so what is the cause of failure? Please give a yes or no answer followed by reasoning specific to the image and pertains to the weather condition. Create a list of these failures and provide bullet points of reasoning for each one. Lastly, see if there are similar failures that could arise in different weather conditions."},
+            {"type": "text", "text": "This is a paired image of two cars using a vision based algorithm to steer under different weather conditions. Is there a cause of failure in this image, and if so what is the cause of failure? If there is no cause of failure, please answer no and explain why there is no cause of failure. If there is, please answer yes followed by reasoning specific to the image and pertains to the weather condition. Create a list of these failures and provide bullet points of reasoning for each one. Lastly, see if there are similar failures that could arise in different weather conditions."},
         ],
     },
 ]
