@@ -11,7 +11,7 @@ from dataloader import create_dataset
 DATA_DIR = "paired_frames"
 LABEL_FILE = "llava_dataset.csv"
 BATCH_SIZE = 32
-NUM_EPOCHS = 10
+NUM_EPOCHS = 100
 LEARNING_RATE = 1e-4
 VAL_SPLIT = 0.2
 MODEL_SAVE_PATH = "resnet_binary_classifier.pth"
