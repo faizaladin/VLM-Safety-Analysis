@@ -128,8 +128,7 @@ def precompute_failure_embeddings(model, processor, dataset, device):
 def main():
     model_name = "llava-hf/llava-1.5-7b-hf"
     processor = AutoProcessor.from_pretrained(model_name)
-
-
+    
     model = LlavaForConditionalGeneration.from_pretrained(model_name, torch_dtype=torch.float16)
     model.gradient_checkpointing_enable()
     model = prepare_model_with_lora(model)
@@ -179,38 +178,31 @@ def main():
     print("Starting training...")
 
     from transformers import Trainer
-    from torch.nn import functional as F
+    from torch.nn import BCEWithLogitsLoss
 
     class CustomTrainer(Trainer):
         def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
-            # Standard loss
             labels = inputs.get("labels")
             outputs = model(**inputs)
-            loss = outputs.loss
-
-            # Get model prediction (first token after generation prompt)
             logits = outputs.logits
-            # Get the predicted token for the first position (batch size 1 assumed)
-            pred_token = logits[:, -labels.shape[1], :].argmax(dim=-1)
-            # Map predicted token to text
-            pred_text = self.tokenizer.decode(pred_token)
-            # Get ground truth label (0: failure, 1: no failure)
-            gt_label = labels[0][0].item() if labels is not None else None
 
-            # If ground truth is 'no failure' (1) but model predicts 'failure' (0)
-            # We'll use a simple check: if 'yes' in pred_text.lower() and gt_label == 1
-            # (0 = failure, 1 = no failure)
-            if gt_label == 1 and 'yes' in pred_text.lower():
-                # Compute image embedding for this sample
-                image = inputs['pixel_values'][0] if 'pixel_values' in inputs else None
-                if image is not None and failure_embs.shape[0] > 0:
-                    # Get embedding for current image
-                    with torch.no_grad():
-                        image_emb = model.model.vision_tower(image.unsqueeze(0)).last_hidden_state.mean(dim=1).squeeze(0)
-                    # Compute Euclidean distances to all failure set embeddings
-                    dists = torch.norm(failure_embs.to(image_emb.device) - image_emb, dim=1)
-                    min_dist = dists.min()
-                    loss = min_dist
+            # Get the logits for the first generated token after the prompt
+            # (Assume batch size 1 for simplicity)
+            first_token_logits = logits[:, -labels.shape[1], :]  # shape: (batch, vocab)
+            # Get token ids for "yes" and "no"
+            yes_id = self.tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
+            no_id = self.tokenizer("no", return_tensors="pt").input_ids[0, 1].item()
+            # Stack logits for "yes" and "no"
+            binary_logits = torch.stack([first_token_logits[:, yes_id], first_token_logits[:, no_id]], dim=1)
+            # Target: 0 if label is "yes", 1 if label is "no"
+            gt_label = labels[0][0].item()
+            target = torch.tensor([gt_label], dtype=torch.float, device=logits.device)
+            # Use only the logit for the correct class
+            selected_logit = binary_logits[:, gt_label]
+            selected_logit = selected_logit.unsqueeze(1)
+            target = target.unsqueeze(1)
+            loss_fct = BCEWithLogitsLoss()
+            loss = loss_fct(selected_logit, target)
             if return_outputs:
                 return loss, outputs
             return loss
