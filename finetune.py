@@ -6,6 +6,7 @@ from transformers import LlavaForConditionalGeneration, AutoProcessor, Trainer, 
 from torch.utils.data import Dataset, random_split
 import random
 from tqdm import tqdm
+import wandb
 
 dataset = "llava_finetune.json"
 
@@ -128,7 +129,7 @@ def precompute_failure_embeddings(model, processor, dataset, device):
 def main():
     model_name = "llava-hf/llava-1.5-7b-hf"
     processor = AutoProcessor.from_pretrained(model_name)
-    
+
     model = LlavaForConditionalGeneration.from_pretrained(model_name, torch_dtype=torch.float16)
     model.gradient_checkpointing_enable()
     model = prepare_model_with_lora(model)
@@ -148,6 +149,7 @@ def main():
     # Use the raw data dicts for access to image paths and text
     failure_embs = precompute_failure_embeddings(model, processor, full_dataset.data[:train_size], device)
     print(f"Failure set size: {failure_embs.shape[0]}")
+    wandb.init(project="llava-finetune", name="llava-1.5-7b-binary")
 
     training_args = TrainingArguments(
         output_dir="./results",
@@ -159,7 +161,9 @@ def main():
         logging_dir="./logs",
         learning_rate=2e-4,
         fp16=True,  # Use float16 mixed precision
-        report_to="none"
+            report_to="wandb",
+            run_name="llava-1.5-7b-binary",
+            project="llava-finetune"
     )
 
     from transformers import TrainerCallback
