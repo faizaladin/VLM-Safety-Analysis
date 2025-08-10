@@ -181,6 +181,10 @@ def main():
     from torch.nn import BCEWithLogitsLoss
 
     class CustomTrainer(Trainer):
+        def __init__(self, *args, pos_weight=None, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.pos_weight = pos_weight
+
         def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
             labels = inputs.get("labels")
             outputs = model(**inputs)
@@ -203,8 +207,7 @@ def main():
             selected_logit = selected_logit.unsqueeze(1)
             target = target.unsqueeze(1)
             # Use the pos_weight computed in main
-            global pos_weight
-            loss_fct = BCEWithLogitsLoss(pos_weight=pos_weight.to(logits.device))
+            loss_fct = BCEWithLogitsLoss(pos_weight=self.pos_weight.to(logits.device))
             loss = loss_fct(selected_logit, target)
             if return_outputs:
                 return loss, outputs
@@ -216,7 +219,8 @@ def main():
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         processing_class=processor,
-        callbacks=[PrintCallback()]
+        callbacks=[PrintCallback()],
+        pos_weight=pos_weight
     )
 
     trainer.train()
