@@ -105,6 +105,11 @@ class LlavaJsonClassificationDataset(Dataset):
 
 
 def main():
+    model_name = "llava-hf/llava-1.5-7b-hf"
+    processor = AutoProcessor.from_pretrained(model_name)
+
+    dataset_path = dataset
+    full_dataset = LlavaJsonClassificationDataset(dataset_path, processor)
     # Compute class weights for BCEWithLogitsLoss
     # 0 = failure (minority), 1 = no failure (majority)
     labels = [item['label'] for item in full_dataset.data]
@@ -115,8 +120,6 @@ def main():
         print(f"Class imbalance: {num_neg} failure (0), {num_pos} no failure (1), pos_weight for BCE: {pos_weight.item():.2f}")
     else:
         pos_weight = torch.tensor([1.0], dtype=torch.float)
-    model_name = "llava-hf/llava-1.5-7b-hf"
-    processor = AutoProcessor.from_pretrained(model_name)
 
     model = LlavaForConditionalGeneration.from_pretrained(model_name, torch_dtype=torch.float16)
     model.gradient_checkpointing_enable()
@@ -124,9 +127,6 @@ def main():
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
-
-    dataset_path = dataset
-    full_dataset = LlavaJsonClassificationDataset(dataset_path, processor)
 
     train_size = int(0.9 * len(full_dataset))
     val_size = len(full_dataset) - train_size
