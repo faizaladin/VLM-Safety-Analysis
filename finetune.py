@@ -87,8 +87,27 @@ if __name__ == "__main__":
 
     batch_size = nearest_power_of_2(len(failure_set) * 2)
     print(f"Calculated batch size: {batch_size}")
-    # model.train()
-    # for epoch in range(epochs):
+    model.train()
+    for epoch in range(epochs):
+        # Get indices for failure (label==0) and success (label==1) in training set
+        failure_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 0]
+        success_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 1]
+
+        # Number of each class to sample for the batch
+        half_batch = batch_size // 2
+        num_failures = min(half_batch, len(failure_indices))
+        num_successes = min(half_batch, len(success_indices))
+
+        # Randomly sample indices for the batch
+        selected_failure_indices = np.random.choice(failure_indices, num_failures, replace=False)
+        selected_success_indices = np.random.choice(success_indices, num_successes, replace=False)
+        batch_indices = np.concatenate([selected_failure_indices, selected_success_indices])
+        np.random.shuffle(batch_indices)
+
+        # Create the batch
+        batch = [dataset[idx] for idx in batch_indices]
+        batch = collate_fn(batch)
+        print(f"Batch size: {len(batch['label'])}, Failures: {int((batch['label']==0).sum())}, Successes: {int((batch['label']==1).sum())}")
     #     total_loss = 0
     #     for batch in train_dataloader:
     #         input_ids = batch['input_ids'].to(device)
