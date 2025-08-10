@@ -7,6 +7,7 @@ from torch.utils.data import Dataset, DataLoader
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import random_split
+import math
 
 class LlavaJsonClassificationDataset(Dataset):
     def __init__(self, json_path, processor, max_length=128):
@@ -80,7 +81,12 @@ if __name__ == "__main__":
         if dataset.data[idx]['label'] == 0:
             failure_set.add(idx)
     print(len(failure_set), "failure frames in training set")
+     # Calculate batch size: 2 * len(failure_set), rounded down to nearest power of 2
+    def nearest_power_of_2(n):
+        return 2 ** (n.bit_length() - 1) if n > 0 else 1
 
+    batch_size = nearest_power_of_2(len(failure_set) * 2)
+    print(f"Calculated batch size: {batch_size}")
     # model.train()
     # for epoch in range(epochs):
     #     total_loss = 0
