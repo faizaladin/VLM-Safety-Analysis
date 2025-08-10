@@ -97,7 +97,7 @@ class LlavaJsonClassificationDataset(Dataset):
         processed['label'] = item['label']  # Add label for sampler
         return processed
 
-# Balanced batch sampler
+# Balanced batch sampler: yields one batch per epoch, up to 64 pos and 64 neg
 class BalancedBatchSampler(Sampler):
     def __init__(self, dataset, batch_size=128, pos_per_batch=64, neg_per_batch=64):
         self.dataset = dataset
@@ -108,22 +108,24 @@ class BalancedBatchSampler(Sampler):
         # Find indices for each class
         self.pos_indices = [i for i, item in enumerate(dataset.data) if item['label'] == 1]
         self.neg_indices = [i for i, item in enumerate(dataset.data) if item['label'] == 0]
-        self.num_batches = min(len(self.pos_indices) // pos_per_batch, len(self.neg_indices) // neg_per_batch)
+
+        # Limit to available samples if not enough
+        self.pos_per_batch = min(self.pos_per_batch, len(self.pos_indices))
+        self.neg_per_batch = min(self.neg_per_batch, len(self.neg_indices))
 
     def __iter__(self):
         pos_indices = self.pos_indices.copy()
         neg_indices = self.neg_indices.copy()
         random.shuffle(pos_indices)
         random.shuffle(neg_indices)
-        for i in range(self.num_batches):
-            pos_batch = pos_indices[i*self.pos_per_batch:(i+1)*self.pos_per_batch]
-            neg_batch = neg_indices[i*self.neg_per_batch:(i+1)*self.neg_per_batch]
-            batch = pos_batch + neg_batch
-            random.shuffle(batch)
-            yield batch
+        pos_batch = pos_indices[:self.pos_per_batch]
+        neg_batch = neg_indices[:self.neg_per_batch]
+        batch = pos_batch + neg_batch
+        random.shuffle(batch)
+        yield batch  # Only one batch per epoch
 
     def __len__(self):
-        return self.num_batches
+        return 1  # Only one batch per epoch
 
 def collate_fn(batch):
     # Collate a list of dicts into a dict of batched tensors
@@ -134,7 +136,6 @@ def collate_fn(batch):
         else:
             out[key] = [item[key] for item in batch]
     return out
-
 
 def main():
     model_name = "llava-hf/llava-1.5-7b-hf"
@@ -167,7 +168,7 @@ def main():
     training_args = TrainingArguments(
         output_dir="./results",
         num_train_epochs=2,
-        per_device_train_batch_size=1,
+        per_device_train_batch_size=128,
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=1,
         save_strategy="epoch",
@@ -221,7 +222,7 @@ def main():
                 return loss, outputs
             return loss
 
-    # Use the balanced batch sampler for the training set
+    # Use the balanced batch sampler for the training set (one batch per epoch)
     train_sampler = BalancedBatchSampler(train_dataset.dataset, batch_size=128, pos_per_batch=64, neg_per_batch=64)
     train_loader = DataLoader(train_dataset.dataset, batch_sampler=train_sampler, collate_fn=collate_fn)
 
