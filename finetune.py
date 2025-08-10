@@ -149,7 +149,7 @@ if __name__ == "__main__":
                     labels=labels
                 )
                 # Use last_hidden_state for differentiable embeddings
-                answer_emb = outputs.last_hidden_state[:, -1, :]  # (batch, hidden)
+                answer_emb = outputs.hidden_states[-1][:, -1, :]  # (batch, hidden)
                 # Debug: check if answer_emb requires grad
                 # print("answer_emb requires grad:", answer_emb.requires_grad)
 
