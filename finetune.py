@@ -159,9 +159,11 @@ if __name__ == "__main__":
 
                 # Get embeddings for generated and reference answers
                 with torch.no_grad():
-                    gen_emb = model.model.model.embed_tokens(processor.tokenizer(generated_text, return_tensors="pt").input_ids.to(device)).mean(dim=1)
-                    yes_emb = model.model.model.embed_tokens(processor.tokenizer(ref_yes, return_tensors="pt").input_ids.to(device)).mean(dim=1)
-                    no_emb = model.model.model.embed_tokens(processor.tokenizer(ref_no, return_tensors="pt").input_ids.to(device)).mean(dim=1)
+                    # Use this for all three embeddings:
+                    embed_tokens = model.model.model.language_model.embed_tokens
+                    gen_emb = embed_tokens(processor.tokenizer(generated_text, return_tensors="pt").input_ids.to(device)).mean(dim=1)
+                    yes_emb = embed_tokens(processor.tokenizer(ref_yes, return_tensors="pt").input_ids.to(device)).mean(dim=1)
+                    no_emb = embed_tokens(processor.tokenizer(ref_no, return_tensors="pt").input_ids.to(device)).mean(dim=1)
 
                 # Cosine similarity
                 sim_yes = F.cosine_similarity(gen_emb, yes_emb)
