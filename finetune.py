@@ -68,7 +68,7 @@ if __name__ == "__main__":
     optimizer = optim.AdamW(model.parameters(), lr=2e-5)
     criterion = nn.BCEWithLogitsLoss()
 
-    epochs = 10
+    epochs = 1
 
     # Split dataset: 80% train, 20% val
     total_len = len(dataset)
@@ -108,49 +108,16 @@ if __name__ == "__main__":
         batch = [dataset[idx] for idx in batch_indices]
         batch = collate_fn(batch)
         print(f"Batch size: {len(batch['label'])}, Failures: {int((batch['label']==0).sum())}, Successes: {int((batch['label']==1).sum())}")
-    #     total_loss = 0
-    #     for batch in train_dataloader:
-    #         input_ids = batch['input_ids'].to(device)
-    #         attention_mask = batch['attention_mask'].to(device)
-    #         labels = batch['labels'].to(device)
-    #         targets = batch['label'].to(device)
 
-    #         optimizer.zero_grad()
-    #         outputs = model(
-    #             input_ids=input_ids,
-    #             attention_mask=attention_mask,
-    #             labels=labels
-    #         )
-    #         logits = outputs.logits
-    #         first_token_logits = logits[:, 0, :]
-    #         tokenizer = model.config.tokenizer_class.from_pretrained(model.config._name_or_path)
-    #         yes_id = tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
-    #         pred_logits = first_token_logits[:, yes_id]
-    #         loss = criterion(pred_logits, targets)
-    #         loss.backward()
-    #         optimizer.step()
-    #         total_loss += loss.item()
-    #     print(f"Epoch {epoch+1} - Train Loss: {total_loss/len(train_dataloader):.4f}")
+        print(f"Batch size: {len(batch['label'])}, Failures: {int((batch['label']==0).sum())}, Successes: {int((batch['label']==1).sum())}")
 
-    #     # Optional: Validation loop
-    #     model.eval()
-    #     val_loss = 0
-    #     with torch.no_grad():
-    #         for batch in val_dataloader:
-    #             input_ids = batch['input_ids'].to(device)
-    #             attention_mask = batch['attention_mask'].to(device)
-    #             labels = batch['labels'].to(device)
-    #             targets = batch['label'].to(device)
-
-    #             outputs = model(
-    #                 input_ids=input_ids,
-    #                 attention_mask=attention_mask,
-    #                 labels=labels
-    #             )
-    #             logits = outputs.logits
-    #             first_token_logits = logits[:, 0, :]
-    #             pred_logits = first_token_logits[:, yes_id]
-    #             loss = criterion(pred_logits, targets)
-    #             val_loss += loss.item()
-    #     print(f"Epoch {epoch+1} - Val Loss: {val_loss/len(val_dataloader):.4f}")
-    #     model.train()
+        # Create a DataLoader for this batch
+        batch_dataset = torch.utils.data.TensorDataset(
+            batch['input_ids'],
+            batch['attention_mask'],
+            batch['labels'],
+            batch['label']
+        )
+        batch_loader = DataLoader(batch_dataset, batch_size=1, shuffle=False)
+        print(len(batch_loader))
+        print(f"Number of items in the batch (from batch_loader): {len(batch_loader.dataset)}")
