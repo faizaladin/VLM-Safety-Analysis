@@ -9,6 +9,7 @@ import torch.optim as optim
 from torch.utils.data import random_split
 import math
 import torch.nn.functional as F
+from peft import LoraConfig, get_peft_model, TaskType
 
 class LlavaJsonClassificationDataset(Dataset):
     def __init__(self, json_path, processor, max_length=128):
@@ -61,6 +62,15 @@ if __name__ == "__main__":
     dataset = LlavaJsonClassificationDataset("llava_finetune.json", processor)
 
     model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf")
+    lora_config = LoraConfig(
+        r=8,
+        lora_alpha=16,
+        target_modules=["q_proj", "v_proj"],  # adjust for your model
+        lora_dropout=0.05,
+        bias="none",
+        task_type=TaskType.CAUSAL_LM
+    )
+    model = get_peft_model(model, lora_config)
     model.gradient_checkpointing_enable()
     model = model.to(device)
 
@@ -87,7 +97,7 @@ if __name__ == "__main__":
     def nearest_power_of_2(n):
         return 2 ** (n.bit_length() - 1) if n > 0 else 1
 
-    batch_size = 32
+    batch_size = nearest_power_of_2(len(failure_set) * 2)
     print(f"Calculated batch size: {batch_size}")
 
     model.train()
@@ -178,3 +188,4 @@ if __name__ == "__main__":
 
         avg_loss = total_loss / len(batch_loader)
         print(f"Epoch {epoch+1} - Training Loss: {avg_loss:.4f}")
+        
