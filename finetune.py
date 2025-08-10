@@ -135,6 +135,7 @@ def collate_fn(batch):
             out[key] = [item[key] for item in batch]
     return out
 
+
 def main():
     model_name = "llava-hf/llava-1.5-7b-hf"
     processor = AutoProcessor.from_pretrained(model_name)
@@ -144,11 +145,7 @@ def main():
     labels = [item['label'] for item in full_dataset.data]
     num_pos = sum(1 for l in labels if l == 1)
     num_neg = sum(1 for l in labels if l == 0)
-    if num_neg > 0:
-        pos_weight = torch.tensor([num_neg / num_pos], dtype=torch.float)
-        print(f"Class imbalance: {num_neg} failure (0), {num_pos} no failure (1), pos_weight for BCE: {pos_weight.item():.2f}")
-    else:
-        pos_weight = torch.tensor([1.0], dtype=torch.float)
+    print(f"Class counts: {num_neg} failure (0), {num_pos} no failure (1)")
 
     model = LlavaForConditionalGeneration.from_pretrained(model_name, torch_dtype=torch.float16)
     model.gradient_checkpointing_enable()
@@ -170,7 +167,7 @@ def main():
     training_args = TrainingArguments(
         output_dir="./results",
         num_train_epochs=2,
-        per_device_train_batch_size=128,
+        per_device_train_batch_size=1,
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=1,
         save_strategy="epoch",
@@ -203,10 +200,6 @@ def main():
     from torch.nn import BCEWithLogitsLoss
 
     class CustomTrainer(Trainer):
-        def __init__(self, *args, pos_weight=None, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.pos_weight = pos_weight
-
         def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
             labels = inputs.get("labels")
             outputs = model(**inputs)
@@ -222,7 +215,7 @@ def main():
             selected_logit = binary_logits[:, gt_label]
             selected_logit = selected_logit.unsqueeze(1)
             target = target.unsqueeze(1)
-            loss_fct = BCEWithLogitsLoss(pos_weight=self.pos_weight.to(logits.device))
+            loss_fct = BCEWithLogitsLoss()  # No pos_weight
             loss = loss_fct(selected_logit, target)
             if return_outputs:
                 return loss, outputs
@@ -239,7 +232,6 @@ def main():
         eval_dataset=val_dataset,
         processing_class=processor,
         callbacks=[PrintCallback()],
-        pos_weight=pos_weight,
         data_collator=collate_fn
     )
 
