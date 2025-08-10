@@ -77,8 +77,6 @@ if __name__ == "__main__":
     model.train()
 
     optimizer = optim.AdamW(model.parameters(), lr=2e-5)
-    criterion = nn.BCEWithLogitsLoss()
-
     epochs = 1
     accumulation_steps = 4  # For gradient accumulation
     scaler = torch.cuda.amp.GradScaler()  # For mixed precision
@@ -95,12 +93,9 @@ if __name__ == "__main__":
             failure_set.add(idx)
     print(len(failure_set), "failure frames in training set")
 
-    # Calculate batch size: 2 * len(failure_set), rounded down to nearest power of 2
-    def nearest_power_of_2(n):
-        return 2 ** (n.bit_length() - 1) if n > 0 else 1
-
-    batch_size = nearest_power_of_2(len(failure_set) * 2)
-    print(f"Calculated batch size: {batch_size}")
+    # Set batch size to 32 (or adjust as needed)
+    batch_size = 32
+    print(f"Batch size set to: {batch_size}")
 
     for epoch in range(epochs):
         # Get indices for failure (label==0) and success (label==1) in training set
@@ -150,13 +145,13 @@ if __name__ == "__main__":
                 outputs = model(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
-                    output_hidden_states=True,  # <-- get hidden states
+                    output_hidden_states=True,
                     labels=labels
                 )
-                # Get the last hidden state for the answer token
-                # (Assume answer is at the last position; adjust as needed)
-                hidden_states = outputs.hidden_states[-1]  # (batch, seq, hidden)
-                answer_emb = hidden_states[:, -1, :]       # (batch, hidden)
+                # Use last_hidden_state for differentiable embeddings
+                answer_emb = outputs.last_hidden_state[:, -1, :]  # (batch, hidden)
+                # Debug: check if answer_emb requires grad
+                # print("answer_emb requires grad:", answer_emb.requires_grad)
 
                 # Reference embeddings (precompute and move to device)
                 ref_yes = "yes there is a failure"
