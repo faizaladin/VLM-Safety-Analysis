@@ -57,6 +57,8 @@ def collate_fn(batch):
             out[key] = [item[key] for item in batch]
     return out
 
+# ... (imports and dataset code unchanged) ...
+
 if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
@@ -66,7 +68,7 @@ if __name__ == "__main__":
     lora_config = LoraConfig(
         r=8,
         lora_alpha=16,
-        target_modules=["q_proj", "v_proj"],  # adjust for your model
+        target_modules=["q_proj", "v_proj"],
         lora_dropout=0.05,
         bias="none",
         task_type=TaskType.CAUSAL_LM
@@ -77,9 +79,10 @@ if __name__ == "__main__":
     model.train()
 
     optimizer = optim.AdamW(model.parameters(), lr=2e-5)
+    criterion = nn.BCEWithLogitsLoss()
     epochs = 1
-    accumulation_steps = 4  # For gradient accumulation
-    scaler = torch.cuda.amp.GradScaler()  # For mixed precision
+    accumulation_steps = 4
+    scaler = torch.cuda.amp.GradScaler()
 
     # Split dataset: 80% train, 20% val
     total_len = len(dataset)
@@ -93,32 +96,30 @@ if __name__ == "__main__":
             failure_set.add(idx)
     print(len(failure_set), "failure frames in training set")
 
-    # Set batch size to 32 (or adjust as needed)
-    batch_size = 32
-    print(f"Batch size set to: {batch_size}")
+    def nearest_power_of_2(n):
+        return 2 ** (n.bit_length() - 1) if n > 0 else 1
+
+    batch_size = nearest_power_of_2(len(failure_set) * 2)
+    print(f"Dynamic batch size set to: {batch_size}")
+
 
     for epoch in range(epochs):
-        # Get indices for failure (label==0) and success (label==1) in training set
         failure_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 0]
         success_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 1]
 
-        # Number of each class to sample for the batch
         half_batch = batch_size // 2
         num_failures = min(half_batch, len(failure_indices))
         num_successes = min(half_batch, len(success_indices))
 
-        # Randomly sample indices for the batch
         selected_failure_indices = np.random.choice(failure_indices, num_failures, replace=False)
         selected_success_indices = np.random.choice(success_indices, num_successes, replace=False)
         batch_indices = np.concatenate([selected_failure_indices, selected_success_indices])
         np.random.shuffle(batch_indices)
 
-        # Create the batch
         batch = [dataset[idx] for idx in batch_indices]
         batch = collate_fn(batch)
         print(f"Batch size: {len(batch['label'])}, Failures: {int((batch['label']==0).sum())}, Successes: {int((batch['label']==1).sum())}")
 
-        # Create a DataLoader for this batch
         batch_dataset = torch.utils.data.TensorDataset(
             batch['input_ids'],
             batch['attention_mask'],
@@ -131,9 +132,6 @@ if __name__ == "__main__":
         total_loss = 0
         optimizer.zero_grad()
 
-        cos = CosineSimilarity(dim=1)
-        mse = MSELoss()
-
         for step, (input_ids, attention_mask, labels, targets) in enumerate(batch_loader):
             input_ids = input_ids.to(device)
             attention_mask = attention_mask.to(device)
@@ -141,39 +139,25 @@ if __name__ == "__main__":
             targets = targets.to(device)
 
             with torch.cuda.amp.autocast():
-                # Forward pass
                 outputs = model(
                     input_ids=input_ids,
                     attention_mask=attention_mask,
-                    output_hidden_states=True,
                     labels=labels
                 )
-                # Use last_hidden_state for differentiable embeddings
-                answer_emb = outputs.hidden_states[-1][:, -1, :]  # (batch, hidden)
-                # Debug: check if answer_emb requires grad
-                # print("answer_emb requires grad:", answer_emb.requires_grad)
+                logits = outputs.logits  # (batch, seq, vocab)
 
-                # Reference embeddings (precompute and move to device)
-                ref_yes = "yes there is a failure"
-                ref_no = "there is no cause of failure"
-                with torch.no_grad():
-                    ref_yes_ids = processor.tokenizer(ref_yes, return_tensors="pt").input_ids.to(device)
-                    ref_no_ids = processor.tokenizer(ref_no, return_tensors="pt").input_ids.to(device)
-                    embed_tokens = model.model.model.language_model.embed_tokens
-                    yes_emb = embed_tokens(ref_yes_ids).mean(dim=1)  # (1, hidden)
-                    no_emb = embed_tokens(ref_no_ids).mean(dim=1)    # (1, hidden)
+                # Use the first token's logits for binary classification (adjust position if needed)
+                first_token_logits = logits[:, 0, :]
+                tokenizer = processor.tokenizer
+                yes_id = tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
+                no_id = tokenizer("no", return_tensors="pt").input_ids[0, 1].item()
+                # Optionally, you can use both yes and no logits, but for BCEWithLogitsLoss, use one
+                pred_logits = first_token_logits[:, yes_id]
+                loss = criterion(pred_logits, targets) / accumulation_steps
 
-                # Cosine similarities
-                sim_yes = cos(answer_emb, yes_emb)  # (batch,)
-                sim_no = cos(answer_emb, no_emb)    # (batch,)
-
-                # Target: if GT label==0, want sim_yes=1, sim_no=-1; if GT label==1, want sim_no=1, sim_yes=-1
-                target_sim_yes = (targets == 0).float() * 1.0 + (targets == 1).float() * -1.0
-                target_sim_no = (targets == 1).float() * 1.0 + (targets == 0).float() * -1.0
-
-                # Loss: encourage correct similarity to be high, incorrect to be low
-                loss = mse(sim_yes, target_sim_yes) + mse(sim_no, target_sim_no)
-                loss = loss / accumulation_steps
+                # For monitoring: convert logits to predicted label (0 or 1)
+                pred_label = (torch.sigmoid(pred_logits) > 0.5).long().item()
+                print(f"Predicted label: {pred_label}, Ground Truth label: {int(targets.item())}")
 
             scaler.scale(loss).backward()
 
@@ -183,10 +167,6 @@ if __name__ == "__main__":
                 optimizer.zero_grad()
 
             total_loss += loss.item() * accumulation_steps
-
-            # For monitoring: which similarity is higher?
-            pred_label_cos = 0 if sim_yes.item() > sim_no.item() else 1
-            print(f"CosineSim Pred label: {pred_label_cos}, GT label: {int(targets.item())}")
 
         avg_loss = total_loss / len(batch_loader)
         print(f"Epoch {epoch+1} - Training Loss: {avg_loss:.4f}")
