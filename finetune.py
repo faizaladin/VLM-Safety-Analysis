@@ -161,7 +161,6 @@ if __name__ == "__main__":
                 # batch['labels'] should be token IDs of the target sentence
                 output = model(**inputs)
                 loss = output.loss  # This is differentiable
-                loss.backward()
 
             # Inspect output (optional)
             generated_ids = torch.argmax(output.logits, dim=-1)
