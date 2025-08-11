@@ -2,7 +2,7 @@ import json
 import torch
 import numpy as np
 from PIL import Image
-from transformers import LlavaForConditionalGeneration, AutoProcessor
+from transformers import AutoModelForSequenceClassification, AutoProcessor
 from torch.utils.data import Dataset, DataLoader
 from torch.utils.data import random_split
 from peft import LoraConfig, get_peft_model, TaskType
@@ -11,27 +11,11 @@ import torch.nn as nn
 
 class CustomTrainer(Trainer):
     def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
-        labels = inputs.get("label")
-        # Forward pass
-        outputs = model(**{k: v for k, v in inputs.items() if k != "label"})
-        logits = outputs.logits
-        # Get the generated answer (greedy decode)
-        generated_ids = torch.argmax(logits, dim=-1)
-        decoded = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)
-        # Map answer to 1 if contains 'no', 0 if contains 'yes'
-        preds = []
-        for ans in decoded:
-            ans_lower = ans.lower()
-            if "no" in ans_lower:
-                preds.append(1.0)
-            elif "yes" in ans_lower:
-                preds.append(0.0)
-            else:
-                preds.append(0.5)  # ambiguous, can be handled differently
-        preds = torch.tensor(preds, dtype=torch.float, device=labels.device)
-        # BCE loss
+        labels = inputs.get("labels")
+        outputs = model(**{k: v for k, v in inputs.items() if k != "labels"})
+        logits = outputs.logits.squeeze(-1)
         bce_loss = nn.BCEWithLogitsLoss()
-        loss = bce_loss(preds, labels)
+        loss = bce_loss(logits, labels)
         return (loss, outputs) if return_outputs else loss
 
 class BatchDictDataset(Dataset):
@@ -43,7 +27,7 @@ class BatchDictDataset(Dataset):
                 return self.batch[idx]
 
 class LlavaJsonClassificationDataset(Dataset):
-    def __init__(self, json_path, processor, max_length=128):
+    def __init__(self, json_path, processor, max_length=256):
         with open(json_path, 'r') as f:
             self.data = json.load(f)
         self.processor = processor
@@ -57,25 +41,16 @@ class LlavaJsonClassificationDataset(Dataset):
         image = Image.open(item['image']).convert('RGB')
         text = item['prompt']
         label = item['label']
-        conversation = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image", "image": image},
-                    {"type": "text", "text": text},
-                ],
-            },
-        ]
-        processed = self.processor.apply_chat_template(
-            conversation,
-            add_generation_prompt=True,
-            tokenize=True,
-            return_dict=True,
+        processed = self.processor(
+            text,
+            image,
+            max_length=self.max_length,
+            padding="max_length",
+            truncation=True,
             return_tensors="pt"
         )
         processed = {k: v.squeeze(0) for k, v in processed.items()}
-        processed['labels'] = processed['input_ids'].clone()
-        processed['label'] = torch.tensor(label, dtype=torch.float)
+        processed['labels'] = torch.tensor(label, dtype=torch.float)
         return processed
 
 def collate_fn(batch):
@@ -88,25 +63,17 @@ def collate_fn(batch):
     return out
 
 
+
 if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
     dataset = LlavaJsonClassificationDataset("llava_finetune.json", processor)
 
-    model = LlavaForConditionalGeneration.from_pretrained("llava-hf/llava-1.5-7b-hf")
-    lora_config = LoraConfig(
-        r=8,
-        lora_alpha=16,
-        target_modules=["q_proj", "v_proj"],
-        lora_dropout=0.05,
-        bias="none",
-        task_type=TaskType.CAUSAL_LM
+    model = AutoModelForSequenceClassification.from_pretrained(
+        "llava-hf/llava-1.5-7b-hf",
+        num_labels=1,
+        problem_type="single_label_classification"
     )
-    model = get_peft_model(model, lora_config)
-    model.gradient_checkpointing_enable()
-    for name, param in model.named_parameters():
-        if "lora" in name.lower():
-            param.requires_grad = True
     model = model.to(device)
 
     # Split dataset: 80% train, 20% val
@@ -121,9 +88,11 @@ if __name__ == "__main__":
     # --- Trainer setup ---
     def compute_metrics(eval_pred):
         logits, labels = eval_pred
-        preds = (logits > 0).astype(int)
-        acc = (preds == labels).mean()
-        return {"accuracy": acc}
+        probs = 1 / (1 + np.exp(-logits))
+        preds = (probs >= 0.5).astype(int)
+        labels = labels.astype(int)
+        accuracy = (preds == labels).mean()
+        return {"accuracy": accuracy}
 
     training_args = TrainingArguments(
         output_dir="./results",
