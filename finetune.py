@@ -196,7 +196,7 @@ if __name__ == "__main__":
         per_device_train_batch_size=1, # Reduced from 2 to 1
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=16, # Increased from 8 to 16 to maintain effective batch size
-        num_train_epochs=1,
+        num_train_epochs=10,
         learning_rate=1e-5,
         weight_decay=0.01,
         lr_scheduler_type="cosine",
