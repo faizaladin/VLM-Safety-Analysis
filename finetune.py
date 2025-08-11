@@ -151,4 +151,12 @@ if __name__ == "__main__":
                 logits = outputs.logits  # (batch, seq, vocab)
                 print(f"outputs.logits shape: {logits.shape}")
 
+                pred_token_ids = logits.argmax(dim=-1)  # shape: (batch, seq)
+
+                # Count "yes" and "no" tokens in the output for the batch
+                num_yes = (pred_token_ids == yes_id).sum().item()
+                num_no = (pred_token_ids == no_id).sum().item()
+                print(f"Predicted 'yes' tokens: {num_yes}, Predicted 'no' tokens: {num_no}")
+            
+
             
