@@ -140,13 +140,15 @@ if __name__ == "__main__":
         for step, batch_data in enumerate(batch_loader):
             input_ids = batch_data['input_ids'].to(device)
             attention_mask = batch_data['attention_mask'].to(device)
+            pixel_values = batch_data['pixel_values'].to(device)  # <- you need this in dataset
             labels = batch_data['labels'].to(device)
             targets = batch_data['label'].to(device).float()
 
             with torch.amp.autocast('cuda'):
                 outputs = model(
                     input_ids=input_ids,
-                    attention_mask=attention_mask
+                    attention_mask=attention_mask,
+                    pixel_values=pixel_values  # <- crucial for LLaVA LoRA
                 )
                 logits = outputs.logits  # (batch, seq, vocab)
                 
@@ -173,7 +175,8 @@ if __name__ == "__main__":
                 loss = sum(loss_parts) / len(loss_parts) if loss_parts else torch.tensor(0.0, device=device, requires_grad=True)
                 loss = loss / accumulation_steps
 
-
-        avg_loss = total_loss / len(batch_loader)
-        print(f"Epoch {epoch+1} - Training Loss: {avg_loss:.4f}")
-                
+            scaler.scale(loss).backward()  # <- missing before
+            if (step + 1) % accumulation_steps == 0:
+                scaler.step(optimizer)
+                scaler.update()
+                optimizer.zero_grad()
