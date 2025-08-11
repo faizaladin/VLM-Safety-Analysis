@@ -4,12 +4,9 @@ import numpy as np
 from PIL import Image
 from transformers import LlavaForConditionalGeneration, AutoProcessor
 from torch.utils.data import Dataset, DataLoader
-import torch.nn as nn
-import torch.optim as optim
 from torch.utils.data import random_split
-import math
-import torch.nn.functional as F
 from peft import LoraConfig, get_peft_model, TaskType
+from transformers import TrainingArguments, Trainer
 
 class BatchDictDataset(Dataset):
             def __init__(self, batch):
@@ -64,6 +61,7 @@ def collate_fn(batch):
             out[key] = [item[key] for item in batch]
     return out
 
+
 if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
@@ -80,25 +78,18 @@ if __name__ == "__main__":
     )
     model = get_peft_model(model, lora_config)
     model.gradient_checkpointing_enable()
-    print(sum(p.requires_grad for p in model.parameters()))
     for name, param in model.named_parameters():
         if "lora" in name.lower():
             param.requires_grad = True
     model = model.to(device)
-    model.train()
-
-    optimizer = optim.AdamW(model.parameters(), lr=2e-5)
-    criterion = nn.BCEWithLogitsLoss()
-    epochs = 1
-    accumulation_steps = 4
-    scaler = torch.cuda.amp.GradScaler()
 
     # Split dataset: 80% train, 20% val
     total_len = len(dataset)
     train_len = int(0.8 * total_len)
     val_len = total_len - train_len
     training_dataset, validation_dataset = random_split(dataset, [train_len, val_len])
-    val_dataloader = DataLoader(validation_dataset, batch_size=1, shuffle=False, collate_fn=collate_fn)
+
+    # --- Batch calculation and selection logic (restored) ---
     failure_set = set()
     for idx in training_dataset.indices:
         if dataset.data[idx]['label'] == 0:
@@ -111,49 +102,50 @@ if __name__ == "__main__":
     batch_size = nearest_power_of_2(len(failure_set) * 2)
     print(f"Dynamic batch size set to: {batch_size}")
 
-    for epoch in range(epochs):
-        failure_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 0]
-        success_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 1]
+    failure_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 0]
+    success_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 1]
 
-        half_batch = batch_size // 2
-        num_failures = min(half_batch, len(failure_indices))
-        num_successes = min(half_batch, len(success_indices))
+    half_batch = batch_size // 2
+    num_failures = min(half_batch, len(failure_indices))
+    num_successes = min(half_batch, len(success_indices))
 
-        selected_failure_indices = np.random.choice(failure_indices, num_failures, replace=False)
-        selected_success_indices = np.random.choice(success_indices, num_successes, replace=False)
-        batch_indices = np.concatenate([selected_failure_indices, selected_success_indices])
-        np.random.shuffle(batch_indices)
+    selected_failure_indices = np.random.choice(failure_indices, num_failures, replace=False)
+    selected_success_indices = np.random.choice(success_indices, num_successes, replace=False)
+    batch_indices = np.concatenate([selected_failure_indices, selected_success_indices])
+    np.random.shuffle(batch_indices)
 
-        batch = [dataset[idx] for idx in batch_indices]
+    batch = [dataset[idx] for idx in batch_indices]
+    batch_dataset = BatchDictDataset(batch)
+    print(f"Number of items in the batch (from batch_dataset): {len(batch_dataset)}")
 
-        batch_loader = DataLoader(BatchDictDataset(batch), batch_size=1, shuffle=False, collate_fn=collate_fn)
-        print(f"Number of items in the batch (from batch_loader): {len(batch_loader.dataset)}")
+    # --- Trainer setup ---
+    def compute_metrics(eval_pred):
+        logits, labels = eval_pred
+        preds = (logits > 0).astype(int)
+        acc = (preds == labels).mean()
+        return {"accuracy": acc}
 
-        total_loss = 0
-        optimizer.zero_grad()
+    training_args = TrainingArguments(
+        output_dir="./results",
+        num_train_epochs=1,
+        per_device_train_batch_size=4,
+        per_device_eval_batch_size=4,
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
+        logging_dir="./logs",
+        logging_steps=10,
+        fp16=torch.cuda.is_available(),
+        report_to=[],
+    )
 
-        tokenizer = processor.tokenizer
-        yes_id = tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
-        no_id = tokenizer("no", return_tensors="pt").input_ids[0, 1].item()
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=batch_dataset,  # Use the selected batch
+        eval_dataset=validation_dataset,
+        data_collator=collate_fn,
+        compute_metrics=compute_metrics,
+    )
 
-        for step, batch_data in enumerate(batch_loader):
-            input_ids = batch_data['input_ids'].to(device)
-            attention_mask = batch_data['attention_mask'].to(device)
-            labels = batch_data['labels'].to(device)
-            targets = batch_data['label'].to(device)
+    trainer.train()
 
-            with torch.cuda.amp.autocast():
-                outputs = model(
-                    input_ids=input_ids,
-                    attention_mask=attention_mask,
-                    labels=labels
-                )
-                logits = outputs.logits  # (batch, seq, vocab)
-                print(f"outputs.logits shape: {logits.shape}")
-
-                pred_token_ids = logits.argmax(dim=-1)  # shape: (batch, seq)
-                print("First 20 predicted token ids:", pred_token_ids[0, :100].tolist())
-                print("First 20 predicted tokens:", tokenizer.batch_decode(pred_token_ids[0, :100].unsqueeze(0)))
-            
-
-            
