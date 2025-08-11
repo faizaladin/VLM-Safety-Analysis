@@ -10,7 +10,6 @@ from torch.utils.data import random_split
 import math
 import torch.nn.functional as F
 from peft import LoraConfig, get_peft_model, TaskType
-from torch.nn import CosineSimilarity, MSELoss
 
 class LlavaJsonClassificationDataset(Dataset):
     def __init__(self, json_path, processor, max_length=128):
@@ -57,8 +56,6 @@ def collate_fn(batch):
             out[key] = [item[key] for item in batch]
     return out
 
-# ... (imports and dataset code unchanged) ...
-
 if __name__ == "__main__":
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf")
@@ -102,7 +99,6 @@ if __name__ == "__main__":
     batch_size = nearest_power_of_2(len(failure_set) * 2)
     print(f"Dynamic batch size set to: {batch_size}")
 
-
     for epoch in range(epochs):
         failure_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 0]
         success_indices = [idx for idx in training_dataset.indices if dataset.data[idx]['label'] == 1]
@@ -136,6 +132,10 @@ if __name__ == "__main__":
         total_loss = 0
         optimizer.zero_grad()
 
+        tokenizer = processor.tokenizer
+        yes_id = tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
+        no_id = tokenizer("no", return_tensors="pt").input_ids[0, 1].item()
+
         for step, batch_data in enumerate(batch_loader):
             input_ids = batch_data['input_ids'].to(device)
             attention_mask = batch_data['attention_mask'].to(device)
@@ -150,18 +150,42 @@ if __name__ == "__main__":
                 )
                 logits = outputs.logits  # (batch, seq, vocab)
 
-                # Use the first token's logits for binary classification (adjust position if needed)
-                first_token_logits = logits[:, 0, :]
-                tokenizer = processor.tokenizer
-                yes_id = tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
-                no_id = tokenizer("no", return_tensors="pt").input_ids[0, 1].item()
-                # Optionally, you can use both yes and no logits, but for BCEWithLogitsLoss, use one
-                pred_logits = first_token_logits[:, yes_id]
-                loss = criterion(pred_logits, targets) / accumulation_steps
+                # Find all positions where labels are not -100 (not padding)
+                active_positions = (labels != -100)
+                batch_indices_, seq_indices = torch.where(active_positions)
+                label_token_ids = labels[batch_indices_, seq_indices]  # (num_active,)
 
-                # For monitoring: convert logits to predicted label (0 or 1)
-                pred_label = (torch.sigmoid(pred_logits) > 0.5).long().item()
-                print(f"Predicted label: {pred_label}, Ground Truth label: {int(targets.item())}")
+                # Create a mask for yes and no tokens
+                yes_mask = (label_token_ids == yes_id)
+                no_mask = (label_token_ids == no_id)
+
+                # Get logits for yes and no tokens at those positions
+                logits_at_active = logits[batch_indices_, seq_indices, :]  # (num_active, vocab)
+                yes_logits = logits_at_active[yes_mask, yes_id]
+                no_logits = logits_at_active[no_mask, no_id]
+
+                # Get targets for those positions (should match your binary label for each sample)
+                targets_yes = targets[batch_indices_[yes_mask]]
+                targets_no = targets[batch_indices_[no_mask]]
+
+                # Compute loss for yes and no tokens (if present)
+                loss = 0
+                count = 0
+                if yes_logits.numel() > 0:
+                    loss += criterion(yes_logits, targets_yes)
+                    count += 1
+                if no_logits.numel() > 0:
+                    loss += criterion(no_logits, 1 - targets_no)  # invert for "no"
+                    count += 1
+                if count > 0:
+                    loss = loss / count / accumulation_steps
+                else:
+                    loss = torch.tensor(0.0, device=device)
+
+                # For monitoring: use the first non-padding position's yes logit for prediction
+                if yes_logits.numel() > 0:
+                    pred_label = (torch.sigmoid(yes_logits[0]) > 0.5).long().item()
+                    print(f"Predicted label: {pred_label}, Ground Truth label: {int(targets[batch_indices_[yes_mask][0]].item())}")
 
             scaler.scale(loss).backward()
 
