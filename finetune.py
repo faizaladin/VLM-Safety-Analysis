@@ -73,6 +73,9 @@ if __name__ == "__main__":
     model = get_peft_model(model, lora_config)
     model.gradient_checkpointing_enable()
     print(sum(p.requires_grad for p in model.parameters()))
+    for name, param in model.named_parameters():
+        if "lora" in name.lower():
+            param.requires_grad = True
     model = model.to(device)
     model.train()
 
@@ -176,6 +179,7 @@ if __name__ == "__main__":
                 loss = loss / accumulation_steps
 
             scaler.scale(loss).backward()  # <- missing before
+
             if (step + 1) % accumulation_steps == 0:
                 scaler.step(optimizer)
                 scaler.update()
