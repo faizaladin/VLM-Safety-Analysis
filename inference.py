@@ -47,7 +47,7 @@ prompt_text = "This is a paired image of two cars using a vision based algorithm
 full_prompt = f"USER: <image>\n{prompt_text}\nASSISTANT:"
 
 # Load your image
-image = Image.open("paired_fail.png")
+image = Image.open("paired_fail_4k.png")
 
 # Process inputs
 inputs = processor(text=full_prompt, images=image, return_tensors="pt").to(device)
