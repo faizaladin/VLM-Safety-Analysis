@@ -117,4 +117,6 @@ if __name__ == "__main__":
         np.random.shuffle(batch_indices)
 
         batch = [dataset[idx] for idx in batch_indices]
-        print(batch[0]['label'])
+        print("First data point in batch:")
+        for k, v in batch[0].items():
+            print(f"  {k}: {v}")
