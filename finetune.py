@@ -147,7 +147,6 @@ if __name__ == "__main__":
     metric_for_best_model="eval_loss",
     greater_is_better=False,
     fp16=True,
-    gradient_checkpointing=True,
     report_to="wandb",
     run_name="llava-lora-run",
 )
