@@ -120,13 +120,17 @@ if __name__ == "__main__":
         batch = collate_fn(batch)
         print(f"Batch size: {len(batch['label'])}, Failures: {int((batch['label']==0).sum())}, Successes: {int((batch['label']==1).sum())}")
 
-        batch_dataset = torch.utils.data.TensorDataset(
-            batch['input_ids'],
-            batch['attention_mask'],
-            batch['labels'],
-            batch['label']
-        )
-        batch_loader = DataLoader(batch_dataset, batch_size=1, shuffle=False)
+        from torch.utils.data import Dataset
+
+        class BatchDictDataset(Dataset):
+            def __init__(self, batch):
+                self.batch = batch
+            def __len__(self):
+                return len(self.batch['label'])
+            def __getitem__(self, idx):
+                return {k: v[idx] for k, v in self.batch.items()}
+
+        batch_loader = DataLoader(BatchDictDataset(batch), batch_size=1, shuffle=False, collate_fn=collate_fn)
         print(f"Number of items in the batch (from batch_loader): {len(batch_loader.dataset)}")
 
         total_loss = 0
