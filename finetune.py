@@ -140,7 +140,7 @@ if __name__ == "__main__":
             input_ids = batch_data['input_ids'].to(device)
             attention_mask = batch_data['attention_mask'].to(device)
             labels = batch_data['labels'].to(device)
-            targets = batch_data['label'].to(device)
+            targets = batch_data['label'].to(device).float()
 
             with torch.cuda.amp.autocast():
                 outputs = model(
@@ -150,42 +150,32 @@ if __name__ == "__main__":
                 )
                 logits = outputs.logits  # (batch, seq, vocab)
 
-                # Find all positions where labels are not -100 (not padding)
                 active_positions = (labels != -100)
-                batch_indices_, seq_indices = torch.where(active_positions)
-                label_token_ids = labels[batch_indices_, seq_indices]  # (num_active,)
+                batch_idx_, seq_idx = torch.where(active_positions)
+                label_token_ids = labels[batch_idx_, seq_idx]
 
-                # Create a mask for yes and no tokens
                 yes_mask = (label_token_ids == yes_id)
-                no_mask = (label_token_ids == no_id)
+                no_mask  = (label_token_ids == no_id)
 
-                # Get logits for yes and no tokens at those positions
-                logits_at_active = logits[batch_indices_, seq_indices, :]  # (num_active, vocab)
+                logits_at_active = logits[batch_idx_, seq_idx, :]
                 yes_logits = logits_at_active[yes_mask, yes_id]
-                no_logits = logits_at_active[no_mask, no_id]
+                no_logits  = logits_at_active[no_mask, no_id]
 
-                # Get targets for those positions (should match your binary label for each sample)
-                targets_yes = targets[batch_indices_[yes_mask]]
-                targets_no = targets[batch_indices_[no_mask]]
+                targets_yes = targets[batch_idx_[yes_mask]]
+                targets_no  = targets[batch_idx_[no_mask]]
 
-                # Compute loss for yes and no tokens (if present)
-                loss = 0
-                count = 0
+                loss_parts = []
                 if yes_logits.numel() > 0:
-                    loss += criterion(yes_logits, targets_yes)
-                    count += 1
+                    loss_parts.append(criterion(yes_logits, targets_yes))
                 if no_logits.numel() > 0:
-                    loss += criterion(no_logits, 1 - targets_no)  # invert for "no"
-                    count += 1
-                if count > 0:
-                    loss = loss / count / accumulation_steps
+                    loss_parts.append(criterion(no_logits, 1 - targets_no))
+
+                if len(loss_parts) > 0:
+                    loss = sum(loss_parts) / len(loss_parts)
                 else:
                     loss = torch.tensor(0.0, device=device)
 
-                # For monitoring: use the first non-padding position's yes logit for prediction
-                if yes_logits.numel() > 0:
-                    pred_label = (torch.sigmoid(yes_logits[0]) > 0.5).long().item()
-                    print(f"Predicted label: {pred_label}, Ground Truth label: {int(targets[batch_indices_[yes_mask][0]].item())}")
+                loss = loss / accumulation_steps
 
             scaler.scale(loss).backward()
 
@@ -193,8 +183,3 @@ if __name__ == "__main__":
                 scaler.step(optimizer)
                 scaler.update()
                 optimizer.zero_grad()
-
-            total_loss += loss.item() * accumulation_steps
-
-        avg_loss = total_loss / len(batch_loader)
-        print(f"Epoch {epoch+1} - Training Loss: {avg_loss:.4f}")
