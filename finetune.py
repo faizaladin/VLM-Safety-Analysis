@@ -103,7 +103,11 @@ if __name__ == "__main__":
     )
     model = get_peft_model(model, lora_config)
     model.gradient_checkpointing_enable()
-    print(sum(p.requires_grad for p in model.parameters()))
+    print('Any parameters require grad:', any(p.requires_grad for p in model.parameters()))
+    print('Parameters that require grad:')
+    for name, param in model.named_parameters():
+        if param.requires_grad:
+            print('  ', name)
     for name, param in model.named_parameters():
         if "lora" in name.lower():
             param.requires_grad = True
@@ -114,7 +118,6 @@ if __name__ == "__main__":
     criterion = nn.BCEWithLogitsLoss()
     epochs = 1
     accumulation_steps = 4
-    scaler = torch.cuda.amp.GradScaler()
 
     # Split dataset: 80% train, 20% val
     total_len = len(dataset)
@@ -157,14 +160,11 @@ if __name__ == "__main__":
             optimizer.zero_grad()
             # Move all tensor inputs to device
             inputs = {k: v.to(device) for k, v in batch.items() if isinstance(v, torch.Tensor) and k != "label"}
-            with torch.amp.autocast('cuda'):
-                # batch['labels'] should be token IDs of the target sentence
-                output = model(**inputs)
-                loss = output.loss  # This is differentiable
+            output = model(**inputs)
+            loss = output.loss  # This is differentiable
 
             # Inspect output (optional)
-            scaler.scale(loss).backward()
-            scaler.step(optimizer)
-            scaler.update()
+            loss.backward()
+            optimizer.step()
     
 
