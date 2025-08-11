@@ -161,8 +161,8 @@ if __name__ == "__main__":
                 yes_logits = logits_at_active[yes_mask, yes_id]
                 no_logits  = logits_at_active[no_mask, no_id]
 
-                targets_yes = targets[batch_idx_[yes_mask]]
-                targets_no  = targets[batch_idx_[no_mask]]
+                targets_yes = targets[batch_idx_[yes_mask]].float()
+                targets_no  = targets[batch_idx_[no_mask]].float()
 
                 loss_parts = []
                 if yes_logits.numel() > 0:
@@ -170,16 +170,18 @@ if __name__ == "__main__":
                 if no_logits.numel() > 0:
                     loss_parts.append(criterion(no_logits, 1 - targets_no))
 
-                if len(loss_parts) > 0:
-                    loss = sum(loss_parts) / len(loss_parts)
-                else:
-                    loss = torch.tensor(0.0, device=device)
-
+                loss = sum(loss_parts) / len(loss_parts) if loss_parts else torch.tensor(0.0, device=device)
                 loss = loss / accumulation_steps
 
-            scaler.scale(loss).backward()
+                scaler.scale(loss).backward()
 
-            if (step + 1) % accumulation_steps == 0 or (step + 1) == len(batch_loader):
-                scaler.step(optimizer)
-                scaler.update()
-                optimizer.zero_grad()
+                if (step + 1) % accumulation_steps == 0 or (step + 1) == len(batch_loader):
+                    scaler.step(optimizer)
+                    scaler.update()
+                    optimizer.zero_grad()
+                
+                total_loss += loss.item() * accumulation_steps
+
+        avg_loss = total_loss / len(batch_loader)
+        print(f"Epoch {epoch+1} - Training Loss: {avg_loss:.4f}")
+                
