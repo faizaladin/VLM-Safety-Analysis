@@ -152,8 +152,8 @@ if __name__ == "__main__":
                 print(f"outputs.logits shape: {logits.shape}")
 
                 pred_token_ids = logits.argmax(dim=-1)  # shape: (batch, seq)
-                print("First 20 predicted token ids:", pred_token_ids[0, :20].tolist())
-                print("First 20 predicted tokens:", tokenizer.batch_decode(pred_token_ids[0, :20].unsqueeze(0)))
+                print("First 20 predicted token ids:", pred_token_ids[0, :100].tolist())
+                print("First 20 predicted tokens:", tokenizer.batch_decode(pred_token_ids[0, :100].unsqueeze(0)))
             
 
             
