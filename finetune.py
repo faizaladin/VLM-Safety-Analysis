@@ -11,6 +11,14 @@ import math
 import torch.nn.functional as F
 from peft import LoraConfig, get_peft_model, TaskType
 
+class BatchDictDataset(Dataset):
+            def __init__(self, batch):
+                self.batch = batch
+            def __len__(self):
+                return len(self.batch)
+            def __getitem__(self, idx):
+                return self.batch[idx]
+
 class LlavaJsonClassificationDataset(Dataset):
     def __init__(self, json_path, processor, max_length=128):
         with open(json_path, 'r') as f:
@@ -117,6 +125,6 @@ if __name__ == "__main__":
         np.random.shuffle(batch_indices)
 
         batch = [dataset[idx] for idx in batch_indices]
-        print("First data point in batch:")
-        for k, v in batch[0].items():
-            print(f"  {k}: {v}")
+
+        batch_loader = DataLoader(BatchDictDataset(batch), batch_size=1, shuffle=False, collate_fn=collate_fn)
+        print(f"Number of items in the batch (from batch_loader): {len(batch_loader.dataset)}")
