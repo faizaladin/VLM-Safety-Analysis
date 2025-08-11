@@ -128,3 +128,27 @@ if __name__ == "__main__":
 
         batch_loader = DataLoader(BatchDictDataset(batch), batch_size=1, shuffle=False, collate_fn=collate_fn)
         print(f"Number of items in the batch (from batch_loader): {len(batch_loader.dataset)}")
+
+        total_loss = 0
+        optimizer.zero_grad()
+
+        tokenizer = processor.tokenizer
+        yes_id = tokenizer("yes", return_tensors="pt").input_ids[0, 1].item()
+        no_id = tokenizer("no", return_tensors="pt").input_ids[0, 1].item()
+
+        for step, batch_data in enumerate(batch_loader):
+            input_ids = batch_data['input_ids'].to(device)
+            attention_mask = batch_data['attention_mask'].to(device)
+            labels = batch_data['labels'].to(device)
+            targets = batch_data['label'].to(device)
+
+            with torch.cuda.amp.autocast():
+                outputs = model(
+                    input_ids=input_ids,
+                    attention_mask=attention_mask,
+                    labels=labels
+                )
+                logits = outputs.logits  # (batch, seq, vocab)
+                print(f"outputs.logits shape: {logits.shape}")
+
+            
