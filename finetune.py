@@ -204,7 +204,8 @@ if __name__ == "__main__":
         metric_for_best_model="eval_loss",
         greater_is_better=False,
         fp16=True,
-        report_to="tensorboard", # or "wandb"
+        report_to="wandb",
+        run_name="llava-lora-weighted-loss",
     )
 
     # --- 5. Instantiate and Run the Custom Trainer ---
