@@ -103,20 +103,21 @@ class WeightedLossTrainer(Trainer):
         else:
             self.class_weights = None
 
-    def compute_loss(self, model, inputs, return_outputs=False):
+    def compute_loss(self, model, inputs, return_outputs=False, **kwargs):
         """
         Overrides the default loss function to apply class weights.
         """
         labels = inputs.pop("labels")
+        # Forward pass
         outputs = model(**inputs)
         logits = outputs.get("logits")
         
+        # Flatten the logits and labels for CrossEntropyLoss
         logits_flat = logits.view(-1, self.model.config.vocab_size)
         labels_flat = labels.view(-1)
         
-        # CORRECT: This now uses the weights stored in the trainer
-        loss_fct = torch.nn.CrossEntropyLoss(weight=self.class_weights)
-        
+        # Use standard CrossEntropyLoss for language modeling
+        loss_fct = torch.nn.CrossEntropyLoss()
         loss = loss_fct(logits_flat, labels_flat)
         return (loss, outputs) if return_outputs else loss
 
