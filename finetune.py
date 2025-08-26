@@ -136,7 +136,7 @@ if __name__ == "__main__":
     # --- 3. Dataset and Splitting ---
     dataset = LlavaFinetuneDataset(json_path, processor)
     total_len = len(dataset)
-    train_len = int(0.9 * total_len)
+    train_len = int(0.85 * total_len)
     val_len = total_len - train_len
     training_dataset = torch.utils.data.Subset(dataset, list(range(train_len)))
     validation_dataset = torch.utils.data.Subset(dataset, list(range(train_len, total_len)))
