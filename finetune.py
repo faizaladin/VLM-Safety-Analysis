@@ -31,7 +31,7 @@ class LlavaFinetuneDataset(Dataset):
         prompt = item['prompt']
         label = item['label']
         # 0 = failure, 1 = no failure
-        target_text = "failure" if label == 0 else "no failure"
+        target_text = "yes" if label == 0 else "no"
         full_prompt = f"USER: <image>\n{prompt}\nASSISTANT:"
 
         inputs = self.processor(text=full_prompt, images=image, return_tensors="pt")
