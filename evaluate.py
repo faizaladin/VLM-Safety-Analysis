@@ -80,12 +80,10 @@ for idx, entry in enumerate(val_entries):
 
 
     # Assign predicted label: 1 if 'no cause of failure' in answer, else 0 if 'yes' or 'failure' and not 'no cause of failure'
-    if "no cause of failure" in answer:
-        pred_label = 1
-    elif ("yes" in answer or "failure" in answer) and not "no cause of failure" in answer:
+    if "is cause of failure" in answer:
         pred_label = 0
     else:
-        pred_label = -1  # uncertain
+        pred_label = 1  # uncertain
 
     # Count TP, FP, TN, FN (only if prediction is certain)
     if pred_label == 0 and label == 0:
