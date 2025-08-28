@@ -58,12 +58,13 @@ val_entries = [entry for entry in data if get_traj_name(entry["image"]) in last_
 print(f"Number of images in last 10 trajectories: {len(val_entries)}")
 
 # --- 5. Run Inference on Each Image ---
-results = []
+
+# --- 6. Calculate TP, FP, TN, FN ---
+TP = FP = TN = FN = 0
 for idx, entry in enumerate(val_entries):
     image_path = entry["image"]
     prompt_text = entry["prompt"]
     label = entry["label"]
-    # Check if image exists
     if not os.path.exists(image_path):
         print(f"Image not found: {image_path}")
         continue
@@ -73,16 +74,37 @@ for idx, entry in enumerate(val_entries):
     generate_ids = model.generate(**inputs, max_new_tokens=1000)
     response_text = processor.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
     try:
-        answer = response_text.split("ASSISTANT:")[-1].strip()
+        answer = response_text.split("ASSISTANT:")[-1].strip().lower()
     except IndexError:
         answer = "Could not parse answer."
+
+    # Assign predicted label: 0 if 'failure' in answer, 1 if 'no failure' in answer
+    if "failure" in answer and not "no failure" in answer:
+        pred_label = 0
+    elif "no failure" in answer:
+        pred_label = 1
+    else:
+        pred_label = -1  # uncertain
+
+    # Count TP, FP, TN, FN (only if prediction is certain)
+    if pred_label == 0 and label == 0:
+        TP += 1
+    elif pred_label == 0 and label == 1:
+        FP += 1
+    elif pred_label == 1 and label == 1:
+        TN += 1
+    elif pred_label == 1 and label == 0:
+        FN += 1
+
     print("-" * 30)
     print(f"[{idx+1}/{len(val_entries)}] {image_path}")
     print(f"Label: {label}")
     print(f"Model's Answer: '{answer}'")
+    print(f"Predicted Label: {pred_label}")
     print("-" * 30)
-    results.append({"image": image_path, "label": label, "answer": answer})
 
-# Optionally, save results to a file
-with open("val_inference_results.json", "w") as f:
-    json.dump(results, f, indent=2)
+print("\nEvaluation Results:")
+print(f"True Positives (TP): {TP}")
+print(f"False Positives (FP): {FP}")
+print(f"True Negatives (TN): {TN}")
+print(f"False Negatives (FN): {FN}")
