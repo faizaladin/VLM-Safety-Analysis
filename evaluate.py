@@ -78,11 +78,12 @@ for idx, entry in enumerate(val_entries):
     except IndexError:
         answer = "Could not parse answer."
 
-    # Assign predicted label: 0 if 'failure' in answer, 1 if 'no failure' in answer
-    if "failure" in answer and not "no failure" in answer:
-        pred_label = 0
-    elif "no failure" in answer:
+
+    # Assign predicted label: 1 if 'no cause of failure' in answer, else 0 if 'yes' or 'failure' and not 'no cause of failure'
+    if "no cause of failure" in answer:
         pred_label = 1
+    elif ("yes" in answer or "failure" in answer) and not "no cause of failure" in answer:
+        pred_label = 0
     else:
         pred_label = -1  # uncertain
 
