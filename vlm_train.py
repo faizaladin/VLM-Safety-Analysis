@@ -258,7 +258,9 @@ if __name__ == "__main__":
                 collision_preds = torch.argmax(collision_logits, dim=1)
                 # Generate text output using base_model
                 for i in range(pixel_values.size(0)):
-                    inputs = processor(text=prompts[i], images=Image.open(image_paths[i][0]).convert('RGB'), return_tensors="pt").to(device)
+                    # Use the same concatenated image as in training
+                    concat_img = dataset.concatenate_images(image_paths[i])
+                    inputs = processor(text=prompts[i], images=concat_img, return_tensors="pt").to(device)
                     output_ids = base_model.generate(**inputs, max_new_tokens=32)
                     response = tokenizer.decode(output_ids[0], skip_special_tokens=True)
                     target_class = batch['main_labels'][i].item()
