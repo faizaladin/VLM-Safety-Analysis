@@ -185,7 +185,6 @@ if __name__ == "__main__":
         warmup_ratio=0.03,
         logging_steps=10,
         save_steps=200,
-        evaluation_strategy="epoch", # Changed to eval per epoch
         save_total_limit=2,
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",
