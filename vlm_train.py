@@ -205,7 +205,7 @@ if __name__ == "__main__":
         # <-- FIX: Removed all saving/loading args to prevent crash
     )
     
-    device = torch.device("cuda" if torch.cuda.is available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu") # <-- SYNTAX FIX
     model.to(device)
     
     # <-- FIX: Only optimize parameters that require gradients
