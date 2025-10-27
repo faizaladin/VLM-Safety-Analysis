@@ -173,22 +173,22 @@ if __name__ == "__main__":
     num_collision_objects = len(collision_object_map)
     model = LlavaClassificationHead(base_model, num_main_classes, num_collision_objects)
 
-training_args = TrainingArguments(
-    output_dir="llava-finetuned-model-sampler",
-    per_device_train_batch_size=8,
-    per_device_eval_batch_size=8,
-    gradient_accumulation_steps=4,
-    num_train_epochs=100,
-    learning_rate=1e-5,
-    weight_decay=0.01,
-    lr_scheduler_type="cosine",
-    warmup_ratio=0.03,
-    logging_steps=10,
-    # No saving or loading best model for now
-    fp16=True,
-    gradient_checkpointing=True,
-    report_to="wandb",
-)
+    training_args = TrainingArguments(
+        output_dir="llava-finetuned-model-sampler",
+        per_device_train_batch_size=8,
+        per_device_eval_batch_size=8,
+        gradient_accumulation_steps=4,
+        num_train_epochs=100,
+        learning_rate=1e-5,
+        weight_decay=0.01,
+        lr_scheduler_type="cosine",
+        warmup_ratio=0.03,
+        logging_steps=10,
+        # No saving or loading best model for now
+        fp16=True,
+        gradient_checkpointing=True,
+        report_to="wandb",
+    )
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
