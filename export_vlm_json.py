@@ -13,9 +13,7 @@ NUM_FRAMES = 16
  # label_map removed, only use label words
 
 prompt_text = (
-    "Classify this trajectory as success, lane violation, or collision. "
-    "Give reasoning to support your classification. "
-    "If there was a collision, what static object will the car collide with?"
+    "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
 )
 
 sequences = []

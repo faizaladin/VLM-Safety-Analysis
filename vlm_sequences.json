@@ -20,7 +20,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -43,7 +43,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -66,7 +66,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -89,7 +89,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -112,7 +112,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -135,7 +135,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -158,7 +158,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -181,7 +181,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -204,7 +204,7 @@
     ],
     "label": "collision",
     "collision_object": "sidewalk",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -227,7 +227,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -250,7 +250,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -273,7 +273,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -296,7 +296,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -319,7 +319,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -342,7 +342,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -365,7 +365,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -388,7 +388,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -411,7 +411,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -434,7 +434,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -457,7 +457,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -480,7 +480,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -503,7 +503,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -526,7 +526,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -549,7 +549,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -572,7 +572,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -595,7 +595,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -618,7 +618,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -641,7 +641,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -664,7 +664,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -687,7 +687,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -710,7 +710,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -733,7 +733,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -756,7 +756,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -779,7 +779,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -802,7 +802,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -825,7 +825,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -848,7 +848,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -871,7 +871,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -894,7 +894,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -917,7 +917,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -940,7 +940,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -963,7 +963,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -986,7 +986,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1009,7 +1009,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1032,7 +1032,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1055,7 +1055,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1078,7 +1078,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1101,7 +1101,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1124,7 +1124,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1147,7 +1147,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1170,7 +1170,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1193,7 +1193,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1216,7 +1216,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1239,7 +1239,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1262,7 +1262,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1285,7 +1285,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1308,7 +1308,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1331,7 +1331,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1354,7 +1354,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1377,7 +1377,7 @@
     ],
     "label": "collision",
     "collision_object": "vegetation",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1400,7 +1400,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1423,7 +1423,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1446,7 +1446,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1469,7 +1469,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1492,7 +1492,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1515,7 +1515,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1538,7 +1538,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1561,7 +1561,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1584,7 +1584,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1607,7 +1607,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1630,7 +1630,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1653,7 +1653,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1676,7 +1676,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1699,7 +1699,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1722,7 +1722,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1745,7 +1745,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1768,7 +1768,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1791,7 +1791,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1814,7 +1814,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1837,7 +1837,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1860,7 +1860,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1883,7 +1883,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1906,7 +1906,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1929,7 +1929,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1952,7 +1952,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1975,7 +1975,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -1998,7 +1998,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2021,7 +2021,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2044,7 +2044,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2067,7 +2067,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2090,7 +2090,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2113,7 +2113,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2136,7 +2136,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2159,7 +2159,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2182,7 +2182,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2205,7 +2205,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2228,7 +2228,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2251,7 +2251,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2274,7 +2274,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2297,7 +2297,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2320,7 +2320,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2343,7 +2343,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2366,7 +2366,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2389,7 +2389,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2412,7 +2412,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2435,7 +2435,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2458,7 +2458,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2481,7 +2481,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2504,7 +2504,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2527,7 +2527,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2550,7 +2550,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2573,7 +2573,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2596,7 +2596,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2619,7 +2619,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2642,7 +2642,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2665,7 +2665,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2688,7 +2688,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2711,7 +2711,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2734,7 +2734,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2757,7 +2757,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2780,7 +2780,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2803,7 +2803,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2826,7 +2826,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2849,7 +2849,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2872,7 +2872,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2895,7 +2895,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2918,7 +2918,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2941,7 +2941,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2964,7 +2964,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -2987,7 +2987,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3010,7 +3010,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3033,7 +3033,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3056,7 +3056,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3079,7 +3079,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3102,7 +3102,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3125,7 +3125,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3148,7 +3148,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3171,7 +3171,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3194,7 +3194,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3217,7 +3217,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3240,7 +3240,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3263,7 +3263,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3286,7 +3286,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3309,7 +3309,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3332,7 +3332,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3355,7 +3355,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3378,7 +3378,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3401,7 +3401,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3424,7 +3424,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3447,7 +3447,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3470,7 +3470,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3493,7 +3493,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3516,7 +3516,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3539,7 +3539,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3562,7 +3562,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3585,7 +3585,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3608,7 +3608,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3631,7 +3631,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3654,7 +3654,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3677,7 +3677,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3700,7 +3700,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3723,7 +3723,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3746,7 +3746,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3769,7 +3769,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3792,7 +3792,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3815,7 +3815,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3838,7 +3838,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3861,7 +3861,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3884,7 +3884,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3907,7 +3907,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3930,7 +3930,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3953,7 +3953,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3976,7 +3976,7 @@
     ],
     "label": "collision",
     "collision_object": "guardrail",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -3999,7 +3999,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4022,7 +4022,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4045,7 +4045,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4068,7 +4068,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4091,7 +4091,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4114,7 +4114,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4137,7 +4137,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4160,7 +4160,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4183,7 +4183,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4206,7 +4206,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4229,7 +4229,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4252,7 +4252,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4275,7 +4275,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4298,7 +4298,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4321,7 +4321,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4344,7 +4344,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4367,7 +4367,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4390,7 +4390,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4413,7 +4413,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4436,7 +4436,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4459,7 +4459,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4482,7 +4482,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4505,7 +4505,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4528,7 +4528,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4551,7 +4551,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4574,7 +4574,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4597,7 +4597,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4620,7 +4620,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4643,7 +4643,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4666,7 +4666,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4689,7 +4689,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4712,7 +4712,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4735,7 +4735,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4758,7 +4758,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4781,7 +4781,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4804,7 +4804,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4827,7 +4827,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4850,7 +4850,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4873,7 +4873,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4896,7 +4896,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4919,7 +4919,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4942,7 +4942,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4965,7 +4965,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -4988,7 +4988,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5011,7 +5011,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5034,7 +5034,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5057,7 +5057,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5080,7 +5080,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5103,7 +5103,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5126,7 +5126,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5149,7 +5149,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5172,7 +5172,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5195,7 +5195,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5218,7 +5218,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5241,7 +5241,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5264,7 +5264,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5287,7 +5287,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5310,7 +5310,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5333,7 +5333,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5356,7 +5356,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5379,7 +5379,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5402,7 +5402,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5425,7 +5425,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5448,7 +5448,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5471,7 +5471,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5494,7 +5494,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5517,7 +5517,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5540,7 +5540,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5563,7 +5563,7 @@
     ],
     "label": "collision",
     "collision_object": "guardrail",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5586,7 +5586,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5609,7 +5609,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5632,7 +5632,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5655,7 +5655,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5678,7 +5678,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5701,7 +5701,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5724,7 +5724,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5747,7 +5747,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5770,7 +5770,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5793,7 +5793,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5816,7 +5816,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5839,7 +5839,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5862,7 +5862,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5885,7 +5885,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5908,7 +5908,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5931,7 +5931,7 @@
     ],
     "label": "collision",
     "collision_object": "sidewalk",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5954,7 +5954,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -5977,7 +5977,7 @@
     ],
     "label": "collision",
     "collision_object": "guardrail",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6000,7 +6000,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6023,7 +6023,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6046,7 +6046,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6069,7 +6069,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6092,7 +6092,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6115,7 +6115,7 @@
     ],
     "label": "collision",
     "collision_object": "traffic_light",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6138,7 +6138,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6161,7 +6161,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6184,7 +6184,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6207,7 +6207,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6230,7 +6230,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6253,7 +6253,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6276,7 +6276,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6299,7 +6299,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6322,7 +6322,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6345,7 +6345,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6368,7 +6368,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6391,7 +6391,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6414,7 +6414,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6437,7 +6437,7 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6460,7 +6460,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6483,7 +6483,7 @@
     ],
     "label": "collision",
     "collision_object": "60",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6506,7 +6506,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6529,7 +6529,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6552,7 +6552,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6575,7 +6575,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6598,7 +6598,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6621,7 +6621,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6644,7 +6644,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6667,7 +6667,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6690,7 +6690,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6713,7 +6713,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6736,7 +6736,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6759,7 +6759,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6782,7 +6782,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6805,7 +6805,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6828,7 +6828,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6851,7 +6851,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6874,7 +6874,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6897,7 +6897,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6920,7 +6920,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6943,7 +6943,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6966,7 +6966,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -6989,7 +6989,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7012,7 +7012,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7035,7 +7035,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7058,7 +7058,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7081,7 +7081,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7104,7 +7104,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7127,7 +7127,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7150,7 +7150,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7173,7 +7173,7 @@
     ],
     "label": "collision",
     "collision_object": "building",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7196,7 +7196,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7219,7 +7219,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7242,7 +7242,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7265,7 +7265,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7288,7 +7288,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7311,7 +7311,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7334,7 +7334,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7357,7 +7357,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7380,7 +7380,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7403,7 +7403,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7426,7 +7426,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7449,7 +7449,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7472,7 +7472,7 @@
     ],
     "label": "collision",
     "collision_object": "fence",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7495,7 +7495,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7518,7 +7518,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7541,7 +7541,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7564,7 +7564,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7587,7 +7587,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7610,7 +7610,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7633,7 +7633,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7656,7 +7656,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7679,7 +7679,7 @@
     ],
     "label": "success",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7702,7 +7702,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7725,7 +7725,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7748,7 +7748,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7771,7 +7771,7 @@
     ],
     "label": "lane violation",
     "collision_object": null,
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7794,7 +7794,7 @@
     ],
     "label": "collision",
     "collision_object": "dynamic",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7817,7 +7817,7 @@
     ],
     "label": "collision",
     "collision_object": "pole",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7840,7 +7840,7 @@
     ],
     "label": "collision",
     "collision_object": "wall",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   },
   {
     "frames": [
@@ -7863,6 +7863,6 @@
     ],
     "label": "collision",
     "collision_object": "static",
-    "prompt": "Classify this trajectory as success, lane violation, or collision. Give reasoning to support your classification. If there was a collision, what static object will the car collide with?"
+    "prompt": "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
   }
 ]
