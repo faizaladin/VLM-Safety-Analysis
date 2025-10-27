@@ -167,15 +167,12 @@ if __name__ == "__main__":
 
     dataset = LlavaSequenceClassificationDataset("llava_input.json", processor, collision_object_map)
 
-    def get_traj(entry):
-        # Use the trajectory folder from the first image in the sequence
-        # This is for splitting, not for image content
-        return entry['images'][0].split('/')[1]
-
-    trajs = sorted(set(get_traj(entry) for entry in all_data))
-    last_10_trajs = set(trajs[-10:])
-    val_indices = [i for i, entry in enumerate(all_data) if get_traj(entry) in last_10_trajs]
-    train_indices = [i for i, entry in enumerate(all_data) if get_traj(entry) not in last_10_trajs]
+    # Random 80/20 split
+    indices = list(range(len(all_data)))
+    np.random.shuffle(indices)
+    split = int(0.8 * len(indices))
+    train_indices = indices[:split]
+    val_indices = indices[split:]
 
     training_dataset = torch.utils.data.Subset(dataset, train_indices)
     validation_dataset = torch.utils.data.Subset(dataset, val_indices)
