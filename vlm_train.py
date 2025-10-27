@@ -111,7 +111,7 @@ class CustomTrainer(Trainer):
 
 
 if __name__ == "__main__":
-    json_path = "llava_finetune.json"
+    json_path = "llava_input.json"
     model_id = "llava-hf/llava-1.5-7b-hf"
 
     quantization_config = BitsAndBytesConfig(
