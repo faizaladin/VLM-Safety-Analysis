@@ -58,7 +58,7 @@ class LlavaSequenceClassificationDataset(Dataset):
             images=concat_img, 
             return_tensors="pt", 
             padding="max_length", # Pad to a consistent length
-            max_length=512,       # <-- FIX: Increased max_length from 128 to 512
+            max_length=1024,      # <-- FIX: Increased max_length from 512 to 1024
             truncation=True
         )
         
@@ -205,7 +205,7 @@ if __name__ == "__main__":
         # <-- FIX: Removed all saving/loading args to prevent crash
     )
     
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda" if torch.cuda.is available() else "cpu")
     model.to(device)
     
     # <-- FIX: Only optimize parameters that require gradients
