@@ -7,11 +7,11 @@ from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from tqdm import tqdm
 import wandb
-import torch.nn as nn
+import torch.nn as nn # <-- Moved import to top
 
 # --- Multi-Image Sequence Dataset ---
 class LlavaSequenceClassificationDataset(Dataset):
-    def __init__(self, json_path, processor, collision_object_map=None, num_frames=16):
+    def __init__(self, json_path, processor, collision_object_map, num_frames=16):
         with open(json_path, 'r') as f:
             self.data = json.load(f)
         self.processor = processor
@@ -25,7 +25,8 @@ class LlavaSequenceClassificationDataset(Dataset):
     def concatenate_images(self, image_paths, resize=(224, 224)):
         images = [Image.open(p).convert("RGB").resize(resize) for p in image_paths[:self.num_frames]]
         if not images:
-            return Image.new("RGB", resize, "white")
+            # Return a blank placeholder image if no paths are provided
+            return Image.new("RGB", resize, "white") 
         total_width = sum(img.size[0] for img in images)
         max_height = max(img.size[1] for img in images)
         new_img = Image.new("RGB", (total_width, max_height))
@@ -39,7 +40,10 @@ class LlavaSequenceClassificationDataset(Dataset):
         item = self.data[idx]
         image_paths = item['images']
         concat_img = self.concatenate_images(image_paths)
-        prompt = item['prompt']
+        
+        # <-- FIX: Format the prompt with the required <image> token and chat structure
+        prompt = f"USER: <image>\n{item['prompt']} ASSISTANT:"
+        
         main_label = self.label_map[item['expected']]
         collision_object = item.get('collision_object', None)
         
@@ -48,24 +52,31 @@ class LlavaSequenceClassificationDataset(Dataset):
         else:
             collision_object_id = -1
 
-        # The processor needs both text and images to create the correct combined input
-        inputs = self.processor(text=prompt, images=concat_img, return_tensors="pt", padding="max_length", max_length=128, truncation=True)
+        # The processor needs both text and images
+        inputs = self.processor(
+            text=prompt, 
+            images=concat_img, 
+            return_tensors="pt", 
+            padding="max_length", # Pad to a consistent length
+            max_length=128,       # Max sequence length
+            truncation=True
+        )
         
         return {
-            # <-- CHANGED: Return text inputs as well
+            # <-- FIX: Return text inputs as well
             'pixel_values': inputs['pixel_values'].squeeze(0),
             'input_ids': inputs['input_ids'].squeeze(0),
             'attention_mask': inputs['attention_mask'].squeeze(0),
             'main_label': torch.tensor(main_label, dtype=torch.long),
             'collision_object_id': torch.tensor(collision_object_id, dtype=torch.long),
-            'prompt': prompt,
+            'prompt': prompt, # Return the formatted prompt
             'collision_object': collision_object,
             'image_paths': image_paths
         }
 
 # --- Classification Collate Function ---
 def sequence_classification_collate_fn(batch):
-    # <-- CHANGED: Batch the new text tensors
+    # <-- FIX: Batch the new text tensors
     pixel_values = torch.stack([item['pixel_values'] for item in batch])
     input_ids = torch.stack([item['input_ids'] for item in batch])
     attention_mask = torch.stack([item['attention_mask'] for item in batch])
@@ -91,32 +102,33 @@ class LlavaClassificationHead(nn.Module):
     def __init__(self, base_model, num_main_classes, num_collision_objects):
         super().__init__()
         self.base_model = base_model
-        # The relevant hidden size is from the language model part of LLaVA
+        # <-- FIX: Get hidden_size from the language model part
         hidden_size = self.base_model.language_model.config.hidden_size
         self.main_classifier = nn.Linear(hidden_size, num_main_classes)
         self.collision_classifier = nn.Linear(hidden_size, num_collision_objects)
 
     def forward(self, pixel_values, input_ids, attention_mask):
-        # <-- CHANGED: Perform a full forward pass through the base model
-        # This engages the LoRA layers in the language model
+        # <-- FIX: Perform a full forward pass through the base model
+        # This engages the LoRA layers
         outputs = self.base_model(
             pixel_values=pixel_values,
             input_ids=input_ids,
             attention_mask=attention_mask,
-            output_hidden_states=True # We need the hidden states for classification
+            output_hidden_states=True # We need the hidden states
         )
         
         # Use the last hidden state from the language model output
         hidden_states = outputs.hidden_states[-1]
         
-        # Pool the hidden states to get a single vector representation for the sequence
-        # We use mean pooling over the sequence length dimension
+        # Pool the hidden states (mean pooling)
         pooled_output = hidden_states.mean(dim=1)
         
         main_logits = self.main_classifier(pooled_output)
         collision_logits = self.collision_classifier(pooled_output)
         
         return main_logits, collision_logits
+
+# Removed unused CustomTrainer class
 
 if __name__ == "__main__":
     wandb.init(project="vlm_llava_training", name="vlm_driving_classification")
@@ -153,6 +165,7 @@ if __name__ == "__main__":
 
     with open(json_path, 'r') as f:
         all_data = json.load(f)
+    # Build collision object map
     objects = {entry.get("collision_object") for entry in all_data if entry.get("collision_object")}
     collision_object_map = {obj: i for i, obj in enumerate(sorted(objects))}
 
@@ -184,21 +197,25 @@ if __name__ == "__main__":
         lr_scheduler_type="cosine",
         warmup_ratio=0.03,
         logging_steps=10,
-        # No saving or loading best model for now
         fp16=True,
         gradient_checkpointing=True,
+        # <-- FIX: Added to silence checkpoint warning
+        gradient_checkpointing_kwargs={'use_reentrant': False}, 
         report_to="wandb",
+        # <-- FIX: Removed all saving/loading args to prevent crash
     )
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    # Only optimize the parameters of the classification head and the LoRA adapters
+    
+    # <-- FIX: Only optimize parameters that require gradients
     optimizer = torch.optim.AdamW(
         [p for p in model.parameters() if p.requires_grad], 
         lr=training_args.learning_rate
     )
     criterion_main = nn.CrossEntropyLoss()
-    criterion_collision = nn.CrossEntropyLoss(ignore_index=-1) # Good practice to ignore non-collision samples
+    # <-- FIX: Use ignore_index for robustness
+    criterion_collision = nn.CrossEntropyLoss(ignore_index=-1) 
 
     train_loader = DataLoader(training_dataset, batch_size=training_args.per_device_train_batch_size, shuffle=True, collate_fn=sequence_classification_collate_fn)
     eval_loader = DataLoader(validation_dataset, batch_size=training_args.per_device_eval_batch_size, shuffle=False, collate_fn=sequence_classification_collate_fn)
@@ -210,7 +227,7 @@ if __name__ == "__main__":
         for batch in train_iter:
             optimizer.zero_grad()
             
-            # <-- CHANGED: Pass all required inputs to the model
+            # <-- FIX: Pass all required inputs to the model
             pixel_values = batch['pixel_values'].to(device)
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
@@ -221,7 +238,6 @@ if __name__ == "__main__":
             
             main_loss = criterion_main(main_logits, main_labels)
             
-            # Only calculate collision loss for samples that are actual collisions
             collision_mask = (main_labels == 1)
             if collision_mask.any():
                 collision_loss = criterion_collision(
@@ -242,12 +258,13 @@ if __name__ == "__main__":
         print(f"Epoch {epoch+1} complete. Average Training Loss: {avg_train_loss}")
         wandb.log({"epoch": epoch+1, "train/loss": avg_train_loss})
 
+        # Evaluation loop (calculates loss)
         model.eval()
         total_eval_loss = 0
         with torch.no_grad():
             eval_iter = tqdm(eval_loader, desc=f"Evaluating Epoch {epoch+1}")
             for batch in eval_iter:
-                # <-- CHANGED: Pass all required inputs to the model
+                # <-- FIX: Pass all required inputs to the model
                 pixel_values = batch['pixel_values'].to(device)
                 input_ids = batch['input_ids'].to(device)
                 attention_mask = batch['attention_mask'].to(device)
