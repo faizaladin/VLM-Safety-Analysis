@@ -168,7 +168,9 @@ if __name__ == "__main__":
     dataset = LlavaSequenceClassificationDataset("llava_input.json", processor, collision_object_map)
 
     def get_traj(entry):
-        return entry['image'].split('/')[1]
+        # Use the trajectory folder from the first image in the sequence
+        # This is for splitting, not for image content
+        return entry['images'][0].split('/')[1]
 
     trajs = sorted(set(get_traj(entry) for entry in all_data))
     last_10_trajs = set(trajs[-10:])
