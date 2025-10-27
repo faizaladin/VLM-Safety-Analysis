@@ -5,6 +5,8 @@ from PIL import Image
 from transformers import LlavaForConditionalGeneration, AutoProcessor, TrainingArguments, Trainer, BitsAndBytesConfig
 from torch.utils.data import Dataset, random_split, DataLoader, WeightedRandomSampler
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+from tqdm import tqdm
+import wandb
 
 # --- Multi-Image Sequence Dataset ---
 class LlavaSequenceClassificationDataset(Dataset):
@@ -125,6 +127,7 @@ class CustomTrainer(Trainer):
 
 
 if __name__ == "__main__":
+    wandb.init(project="vlm_llava_training", name="vlm_driving_classification")
     json_path = "llava_input.json"
     model_id = "llava-hf/llava-1.5-7b-hf"
 
@@ -188,8 +191,8 @@ if __name__ == "__main__":
 
     training_args = TrainingArguments(
         output_dir="llava-finetuned-model-sampler",
-        per_device_train_batch_size=1,
-        per_device_eval_batch_size=1,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=16,
         gradient_accumulation_steps=16,
         num_train_epochs=10,
         learning_rate=1e-5,
@@ -221,7 +224,8 @@ if __name__ == "__main__":
 
     for epoch in range(training_args.num_train_epochs):
         model.train()
-        for batch in train_loader:
+        train_iter = tqdm(train_loader, desc=f"Training Epoch {epoch+1}")
+        for batch in train_iter:
             pixel_values = batch['pixel_values'].to(device)
             main_labels = batch['main_labels'].to(device)
             collision_object_ids = batch['collision_object_ids'].to(device)
@@ -236,6 +240,7 @@ if __name__ == "__main__":
             total_loss.backward()
             optimizer.step()
             optimizer.zero_grad()
+            train_iter.set_postfix({"loss": total_loss.item()})
         print(f"Epoch {epoch+1} complete.")
 
     # Save model
@@ -248,7 +253,8 @@ if __name__ == "__main__":
     from transformers import AutoTokenizer
     tokenizer = AutoProcessor.from_pretrained(model_id).tokenizer
     with torch.no_grad():
-        for batch in eval_loader:
+        eval_iter = tqdm(eval_loader, desc="Evaluating")
+        for batch in eval_iter:
             pixel_values = batch['pixel_values'].to(device)
             prompts = batch['prompts']
             image_paths = batch['image_paths']
