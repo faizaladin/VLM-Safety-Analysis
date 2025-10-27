@@ -10,13 +10,15 @@ from torch.utils.data import Dataset, random_split, DataLoader, WeightedRandomSa
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
 
-# --- Classification Dataset ---
-class LlavaClassificationDataset(Dataset):
-    def __init__(self, json_path, processor, collision_object_map=None):
+
+# --- Multi-Image Sequence Dataset ---
+class LlavaSequenceClassificationDataset(Dataset):
+    def __init__(self, json_path, processor, collision_object_map=None, num_frames=16):
         with open(json_path, 'r') as f:
             self.data = json.load(f)
         self.processor = processor
         self.label_map = {"success": 0, "collision": 1, "lane violation": 2}
+        self.num_frames = num_frames
         # Build collision object map if not provided
         if collision_object_map is None:
             objects = set()
@@ -31,36 +33,47 @@ class LlavaClassificationDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
+    def concatenate_images(self, image_paths, resize=(224, 224)):
+        images = [Image.open(p).convert("RGB").resize(resize) for p in image_paths[:self.num_frames]]
+        total_width = sum(img.size[0] for img in images)
+        max_height = max(img.size[1] for img in images)
+        new_img = Image.new("RGB", (total_width, max_height))
+        x_offset = 0
+        for img in images:
+            new_img.paste(img, (x_offset, 0))
+            x_offset += img.size[0]
+        return new_img
+
     def __getitem__(self, idx):
         item = self.data[idx]
-        image_path = item['image']
-        image = Image.open(image_path).convert('RGB')
+        image_paths = item['images']
+        concat_img = self.concatenate_images(image_paths)
         prompt = item['prompt']
-        main_label = self.label_map[item['label']]
+        main_label = self.label_map[item['expected']]
         collision_object = item.get('collision_object', None)
         if collision_object:
             collision_object_id = self.collision_object_map[collision_object]
         else:
             collision_object_id = -1
-        inputs = self.processor(text=prompt, images=image, return_tensors="pt")
+        inputs = self.processor(text=prompt, images=concat_img, return_tensors="pt")
         return {
             'pixel_values': inputs['pixel_values'].squeeze(0),
             'main_label': torch.tensor(main_label, dtype=torch.long),
             'collision_object_id': torch.tensor(collision_object_id, dtype=torch.long),
             'prompt': prompt,
             'collision_object': collision_object,
-            'image_path': image_path
+            'image_paths': image_paths
         }
 
 
 # --- Classification Collate Function ---
-def classification_collate_fn(batch):
+def sequence_classification_collate_fn(batch):
     pixel_values = torch.stack([item['pixel_values'] for item in batch])
     main_labels = torch.stack([item['main_label'] for item in batch])
     collision_object_ids = torch.stack([item['collision_object_id'] for item in batch])
     prompts = [item['prompt'] for item in batch]
     collision_objects = [item['collision_object'] for item in batch]
-    image_paths = [item['image_path'] for item in batch]
+    image_paths = [item['image_paths'] for item in batch]
     return {
         'pixel_values': pixel_values,
         'main_labels': main_labels,
@@ -152,7 +165,7 @@ if __name__ == "__main__":
             objects.add(obj)
     collision_object_map = {obj: i for i, obj in enumerate(sorted(objects))}
 
-    dataset = LlavaClassificationDataset(json_path, processor, collision_object_map)
+    dataset = LlavaSequenceClassificationDataset("llava_input.json", processor, collision_object_map)
 
     def get_traj(entry):
         return entry['image'].split('/')[1]
@@ -203,8 +216,8 @@ if __name__ == "__main__":
     criterion_main = nn.CrossEntropyLoss()
     criterion_collision = nn.CrossEntropyLoss()
 
-    train_loader = DataLoader(training_dataset, batch_size=1, shuffle=True, collate_fn=classification_collate_fn)
-    eval_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False, collate_fn=classification_collate_fn)
+    train_loader = DataLoader(training_dataset, batch_size=1, shuffle=True, collate_fn=sequence_classification_collate_fn)
+    eval_loader = DataLoader(validation_dataset, batch_size=1, shuffle=False, collate_fn=sequence_classification_collate_fn)
 
     for epoch in range(training_args.num_train_epochs):
         model.train()
