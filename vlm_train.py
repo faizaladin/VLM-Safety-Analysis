@@ -58,7 +58,7 @@ class LlavaSequenceClassificationDataset(Dataset):
             images=concat_img, 
             return_tensors="pt", 
             padding="max_length", # Pad to a consistent length
-            max_length=128,       # Max sequence length
+            max_length=512,       # <-- FIX: Increased max_length from 128 to 512
             truncation=True
         )
         
@@ -293,3 +293,4 @@ if __name__ == "__main__":
     # Save the final model (head and LoRA adapters)
     torch.save(model.state_dict(), "llava-finetuned-classification.pt")
     print("Training complete. Model saved to 'llava-finetuned-classification.pt'")
+
