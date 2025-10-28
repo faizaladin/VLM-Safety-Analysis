@@ -7,7 +7,7 @@ from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from tqdm import tqdm
 import wandb
-import torch.nn as nn # <-- Moved import to top
+import torch.nn as nn 
 
 # Llava Dataset 
 class LlavaSequenceClassificationDataset(Dataset):
@@ -180,8 +180,13 @@ if __name__ == "__main__":
     print(f"Validation samples: {len(validation_dataset)}")
 
     num_main_classes = 3
-    num_collision_objects = len(collision_object_map) 
+    num_collision_objects = len(collision_object_map)
     model = LlavaClassificationHead(base_model, num_main_classes, num_collision_objects)
+    # Ensure classification head parameters require gradients
+    for param in model.main_classifier.parameters():
+        param.requires_grad = True
+    for param in model.collision_classifier.parameters():
+        param.requires_grad = True
 
     training_args = TrainingArguments(
         output_dir="llava-finetuned-model-sampler",
@@ -237,21 +242,28 @@ if __name__ == "__main__":
             total_loss = main_loss + collision_loss
             
             total_loss.backward()
+            # Compute and print gradient norm for classification head
+            grad_norm = 0.0
+            for param in list(model.main_classifier.parameters()) + list(model.collision_classifier.parameters()):
+                if param.grad is not None:
+                    grad_norm += param.grad.norm().item() ** 2
+            grad_norm = grad_norm ** 0.5
+            print(f"Gradient norm (classification head): {grad_norm:.4f}")
             optimizer.step()
             
             total_train_loss += total_loss.item()
-            train_iter.set_postfix({"loss": total_loss.item()})
+            train_iter.set_postfix({"loss": total_loss.item(), "grad_norm": grad_norm})
         
         avg_train_loss = total_train_loss / len(train_loader)
         print(f"Epoch {epoch+1} complete. Average Training Loss: {avg_train_loss}")
         wandb.log({"epoch": epoch+1, "train/loss": avg_train_loss})
 
         model.eval()
+        model.eval()
         total_eval_loss = 0
         with torch.no_grad():
             eval_iter = tqdm(eval_loader, desc=f"Evaluating Epoch {epoch+1}")
-            # Create a wandb Table for structured logging
-            columns = ["Epoch", "Prompt", "Image", "Pred Class", "Target Class", "Pred Collision", "Target Collision"]
+            columns = ["Epoch", "Prompt", "Pred Class", "Target Class", "Pred Collision", "Target Collision"]
             eval_table = wandb.Table(columns=columns)
             for batch in eval_iter:
                 pixel_values = batch['pixel_values'].to(device)
@@ -260,7 +272,6 @@ if __name__ == "__main__":
                 main_labels = batch['main_labels'].to(device)
                 collision_object_ids = batch['collision_object_ids'].to(device)
                 prompts = batch['prompts']
-                image_paths_list = batch['image_paths']
 
                 main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
 
@@ -272,7 +283,6 @@ if __name__ == "__main__":
                 main_preds = torch.argmax(main_logits, dim=1)
                 collision_preds = torch.argmax(collision_logits, dim=1)
                 for i in range(len(prompts)):
-                    pil_image = dataset.concatenate_images(image_paths_list[i])
                     pred_class = inv_label_map.get(main_preds[i].item(), "N/A")
                     target_class = inv_label_map.get(main_labels[i].item(), "N/A")
                     pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
@@ -280,18 +290,19 @@ if __name__ == "__main__":
                     eval_table.add_data(
                         epoch + 1,
                         prompts[i],
-                        wandb.Image(pil_image),
                         pred_class,
                         target_class,
                         pred_coll,
                         target_coll
                     )
-            # <-- REMOVED: wandb.log call from here
-
-        avg_eval_loss = total_eval_loss / len(eval_loader)
+            avg_eval_loss = total_eval_loss / len(eval_loader)
+            wandb.log({
+                "epoch": epoch+1,
+                "eval/loss": avg_eval_loss,
+                "eval/predictions_table": eval_table
+            })
         print(f"Epoch {epoch+1} Evaluation Loss: {avg_eval_loss}")
         
-        # <-- CHANGED: Combined all epoch-level logs into one call
         wandb.log({
             "epoch": epoch+1, 
             "eval/loss": avg_eval_loss,
