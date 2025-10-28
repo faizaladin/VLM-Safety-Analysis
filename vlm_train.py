@@ -3,13 +3,17 @@ import torch
 import numpy as np
 from PIL import Image
 from transformers import LlavaForConditionalGeneration, AutoProcessor, TrainingArguments, BitsAndBytesConfig
-from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
+from torch.utils.data import Dataset, DataLoader
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from tqdm import tqdm
 import wandb
-import torch.nn as nn 
+import torch.nn as nn
+import os
 
-# Llava Dataset 
+# ============================================================
+# Llava Dataset
+# ============================================================
+
 class LlavaSequenceClassificationDataset(Dataset):
     def __init__(self, json_path, processor, collision_object_map, num_frames=16):
         with open(json_path, 'r') as f:
@@ -22,11 +26,10 @@ class LlavaSequenceClassificationDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-    # Sequence of images into one image
     def concatenate_images(self, image_paths, resize=(224, 224)):
         images = [Image.open(p).convert("RGB").resize(resize) for p in image_paths[:self.num_frames]]
         if not images:
-            return Image.new("RGB", resize, "white") 
+            return Image.new("RGB", resize, "white")
         total_width = sum(img.size[0] for img in images)
         max_height = max(img.size[1] for img in images)
         new_img = Image.new("RGB", (total_width, max_height))
@@ -40,41 +43,38 @@ class LlavaSequenceClassificationDataset(Dataset):
         item = self.data[idx]
         image_paths = item['images']
         concat_img = self.concatenate_images(image_paths)
-        
+
         prompt = f"USER: <image>\n{item['prompt']} ASSISTANT:"
-        
+
         main_label = self.label_map[item['expected']]
         collision_object = item.get('collision_object', None)
 
-        # If Collision find object
         if main_label == self.label_map["collision"]:
             collision_object_id = self.collision_object_map[collision_object]
         else:
-            # This is "success" or "lane violation", target is "N/A"
             collision_object_id = self.collision_object_map["N/A"]
 
-        # Combine input and image
         inputs = self.processor(
-            text=prompt, 
-            images=concat_img, 
-            return_tensors="pt", 
-            padding="max_length", 
+            text=prompt,
+            images=concat_img,
+            return_tensors="pt",
+            padding="max_length",
             max_length=1024,
             truncation=True
         )
-        
+
         return {
             'pixel_values': inputs['pixel_values'].squeeze(0),
             'input_ids': inputs['input_ids'].squeeze(0),
             'attention_mask': inputs['attention_mask'].squeeze(0),
             'main_label': torch.tensor(main_label, dtype=torch.long),
-            'collision_object_id': torch.tensor(collision_object_id, dtype=torch.long), 
-            'prompt': prompt, 
+            'collision_object_id': torch.tensor(collision_object_id, dtype=torch.long),
+            'prompt': prompt,
             'collision_object': collision_object,
             'image_paths': image_paths
         }
 
-# Converts batch of items into tensors
+
 def sequence_classification_collate_fn(batch):
     pixel_values = torch.stack([item['pixel_values'] for item in batch])
     input_ids = torch.stack([item['input_ids'] for item in batch])
@@ -84,7 +84,7 @@ def sequence_classification_collate_fn(batch):
     prompts = [item['prompt'] for item in batch]
     collision_objects = [item['collision_object'] for item in batch]
     image_paths = [item['image_paths'] for item in batch]
-    
+
     return {
         'pixel_values': pixel_values,
         'input_ids': input_ids,
@@ -92,11 +92,14 @@ def sequence_classification_collate_fn(batch):
         'main_labels': main_labels,
         'collision_object_ids': collision_object_ids,
         'prompts': prompts,
-        'collision_objects': collision_objects, 
+        'collision_objects': collision_objects,
         'image_paths': image_paths
     }
 
-# Classification Head (need to classify as success, fail and collision) Freeze at inference
+# ============================================================
+# Classification Head
+# ============================================================
+
 class LlavaClassificationHead(nn.Module):
     def __init__(self, base_model, num_main_classes, num_collision_objects):
         super().__init__()
@@ -112,19 +115,21 @@ class LlavaClassificationHead(nn.Module):
             attention_mask=attention_mask,
             output_hidden_states=True
         )
-        
         hidden_states = outputs.hidden_states[-1]
         pooled_output = hidden_states.mean(dim=1)
-        
         main_logits = self.main_classifier(pooled_output)
         collision_logits = self.collision_classifier(pooled_output)
-        
-        # For loss calculation
         return main_logits, collision_logits
-    
+
+# ============================================================
+# Main Training Loop
+# ============================================================
 
 if __name__ == "__main__":
-    wandb.init(project="vlm_llava_training", name="vlm_driving_classification")
+    os.environ["WANDB_MODE"] = "online"
+    run = wandb.init(project="vlm_llava_training", name="vlm_driving_classification")
+    print("W&B Run:", run)
+
     json_path = "llava_input.json"
     model_id = "llava-hf/llava-1.5-7b-hf"
 
@@ -139,10 +144,10 @@ if __name__ == "__main__":
         quantization_config=quantization_config,
         device_map="auto",
     )
+
     processor = AutoProcessor.from_pretrained(model_id)
     processor.tokenizer.padding_side = 'right'
     processor.tokenizer.pad_token = processor.tokenizer.eos_token
-
     base_model = prepare_model_for_kbit_training(base_model)
 
     lora_config = LoraConfig(
@@ -158,14 +163,12 @@ if __name__ == "__main__":
 
     with open(json_path, 'r') as f:
         all_data = json.load(f)
-        
-    # All collision objects to select from
+
     objects = {entry.get("collision_object") for entry in all_data if entry.get("collision_object")}
     sorted_objects = sorted(list(objects))
     collision_object_map = {obj: i for i, obj in enumerate(sorted_objects)}
-    collision_object_map["N/A"] = len(sorted_objects) 
+    collision_object_map["N/A"] = len(sorted_objects)
 
-    # Building Dataset
     dataset = LlavaSequenceClassificationDataset(json_path, processor, collision_object_map)
 
     indices = list(range(len(dataset)))
@@ -182,7 +185,7 @@ if __name__ == "__main__":
     num_main_classes = 3
     num_collision_objects = len(collision_object_map)
     model = LlavaClassificationHead(base_model, num_main_classes, num_collision_objects)
-    # Ensure classification head parameters require gradients
+
     for param in model.main_classifier.parameters():
         param.requires_grad = True
     for param in model.collision_classifier.parameters():
@@ -201,19 +204,18 @@ if __name__ == "__main__":
         logging_steps=10,
         fp16=True,
         gradient_checkpointing=True,
-        gradient_checkpointing_kwargs={'use_reentrant': False}, 
-        report_to="wandb",
+        gradient_checkpointing_kwargs={'use_reentrant': False},
     )
-    
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-    
+
     optimizer = torch.optim.AdamW(
-        [p for p in model.parameters() if p.requires_grad], 
+        [p for p in model.parameters() if p.requires_grad],
         lr=training_args.learning_rate
     )
     criterion_main = nn.CrossEntropyLoss()
-    criterion_collision = nn.CrossEntropyLoss() 
+    criterion_collision = nn.CrossEntropyLoss()
 
     train_loader = DataLoader(training_dataset, batch_size=training_args.per_device_train_batch_size, shuffle=True, collate_fn=sequence_classification_collate_fn)
     eval_loader = DataLoader(validation_dataset, batch_size=training_args.per_device_eval_batch_size, shuffle=False, collate_fn=sequence_classification_collate_fn)
@@ -227,44 +229,35 @@ if __name__ == "__main__":
         total_train_loss = 0
         for batch in train_iter:
             optimizer.zero_grad()
-            
             pixel_values = batch['pixel_values'].to(device)
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             main_labels = batch['main_labels'].to(device)
             collision_object_ids = batch['collision_object_ids'].to(device)
-            
+
             main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
-            
             main_loss = criterion_main(main_logits, main_labels)
-            
             collision_loss = criterion_collision(collision_logits, collision_object_ids)
             total_loss = main_loss + collision_loss
-            
             total_loss.backward()
-            # Compute and print gradient norm for classification head
-            grad_norm = 0.0
-            for param in list(model.main_classifier.parameters()) + list(model.collision_classifier.parameters()):
-                if param.grad is not None:
-                    grad_norm += param.grad.norm().item() ** 2
-            grad_norm = grad_norm ** 0.5
-            print(f"Gradient norm (classification head): {grad_norm:.4f}")
             optimizer.step()
-            
-            total_train_loss += total_loss.item()
-            train_iter.set_postfix({"loss": total_loss.item(), "grad_norm": grad_norm})
-        
-        avg_train_loss = total_train_loss / len(train_loader)
-        print(f"Epoch {epoch+1} complete. Average Training Loss: {avg_train_loss}")
-        wandb.log({"epoch": epoch+1, "train/loss": avg_train_loss})
 
-        model.eval()
+            total_train_loss += total_loss.item()
+            train_iter.set_postfix({"loss": total_loss.item()})
+
+        avg_train_loss = total_train_loss / len(train_loader)
+        wandb.log({"epoch": epoch + 1, "train/loss": avg_train_loss})
+
+        # ============================================================
+        # Evaluation Phase
+        # ============================================================
         model.eval()
         total_eval_loss = 0
+        columns = ["Epoch", "Prompt", "Pred Class", "Target Class", "Pred Collision", "Target Collision"]
+        eval_table = wandb.Table(columns=columns)
+
         with torch.no_grad():
             eval_iter = tqdm(eval_loader, desc=f"Evaluating Epoch {epoch+1}")
-            columns = ["Epoch", "Prompt", "Pred Class", "Target Class", "Pred Collision", "Target Collision"]
-            eval_table = wandb.Table(columns=columns)
             for batch in eval_iter:
                 pixel_values = batch['pixel_values'].to(device)
                 input_ids = batch['input_ids'].to(device)
@@ -274,7 +267,6 @@ if __name__ == "__main__":
                 prompts = batch['prompts']
 
                 main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
-
                 main_loss = criterion_main(main_logits, main_labels)
                 collision_loss = criterion_collision(collision_logits, collision_object_ids)
                 total_loss = main_loss + collision_loss
@@ -282,27 +274,32 @@ if __name__ == "__main__":
 
                 main_preds = torch.argmax(main_logits, dim=1)
                 collision_preds = torch.argmax(collision_logits, dim=1)
+
                 for i in range(len(prompts)):
+                    prompt_clean = str(prompts[i]).replace("\n", " ")[:300]
                     pred_class = inv_label_map.get(main_preds[i].item(), "N/A")
                     target_class = inv_label_map.get(main_labels[i].item(), "N/A")
                     pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
                     target_coll = inv_collision_map.get(collision_object_ids[i].item(), "N/A")
                     eval_table.add_data(
-                        epoch + 1,
-                        prompts[i],
-                        pred_class,
-                        target_class,
-                        pred_coll,
-                        target_coll
+                        int(epoch + 1),
+                        prompt_clean,
+                        str(pred_class),
+                        str(target_class),
+                        str(pred_coll),
+                        str(target_coll)
                     )
-            avg_eval_loss = total_eval_loss / len(eval_loader)
-            wandb.log({
-                "epoch": epoch+1,
-                "eval/loss": avg_eval_loss,
-                "eval/predictions_table": eval_table
-            })
-        print(f"Epoch {epoch+1} Evaluation Loss: {avg_eval_loss}")
-    
-    torch.save(model.state_dict(), "llava-finetuned-classification.pt")
-    print("Training complete. Model saved to 'llava-finetuned-classification.pt'")
 
+        print(f"Eval table has {len(eval_table.data)} rows")
+        avg_eval_loss = total_eval_loss / len(eval_loader)
+
+        # Log scalars and table separately
+        wandb.log({"epoch": epoch + 1, "eval/loss": avg_eval_loss})
+        if len(eval_table.data) > 0:
+            wandb.log({"eval/predictions_table": eval_table})
+
+        print(f"Epoch {epoch+1} Evaluation Loss: {avg_eval_loss}")
+
+    torch.save(model.state_dict(), "llava-finetuned-classification.pt")
+    wandb.finish()
+    print("Training complete. Model saved to 'llava-finetuned-classification.pt'")
