@@ -93,7 +93,7 @@ def sequence_classification_collate_fn(batch):
         'main_labels': main_labels,
         'collision_object_ids': collision_object_ids,
         'prompts': prompts,
-        'collision_objects': collisions_objects,
+        'collision_objects': collision_objects, # <-- TYPO FIX: Removed extra 's'
         'image_paths': image_paths
     }
 
@@ -298,14 +298,15 @@ if __name__ == "__main__":
                         
                         # This will now correctly show "N/A"
                         pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
+
                         target_coll = inv_collision_map.get(collision_object_ids[i].item(), "N/A")
                         
                         # <-- CHANGED: Create a caption for each image
                         caption = f"""Epoch: {epoch + 1}
-Prompt: {prompts[i]}
-Pred Class: {pred_class} | Target Class: {target_class}
-Pred Collision: {pred_coll} | Target Collision: {target_coll}
-"""
+                        Prompt: {prompts[i]}
+                        Pred Class: {pred_class} | Target Class: {target_class}
+                        Pred Collision: {pred_coll} | Target Collision: {target_coll}
+                        """
                         
                         # <-- CHANGED: Add the wandb.Image with caption to the list
                         log_images.append(wandb.Image(pil_image, caption=caption))
