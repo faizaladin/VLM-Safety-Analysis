@@ -220,6 +220,11 @@ if __name__ == "__main__":
     train_loader = DataLoader(training_dataset, batch_size=training_args.per_device_train_batch_size, shuffle=True, collate_fn=sequence_classification_collate_fn)
     eval_loader = DataLoader(validation_dataset, batch_size=training_args.per_device_eval_batch_size, shuffle=False, collate_fn=sequence_classification_collate_fn)
 
+    # --- Get inverse maps for logging readable labels ---
+    # We use the full dataset instance for this
+    inv_label_map = {v: k for k, v in dataset.label_map.items()}
+    inv_collision_map = {v: k for k, v in dataset.collision_object_map.items()}
+
     for epoch in range(int(training_args.num_train_epochs)):
         model.train()
         train_iter = tqdm(train_loader, desc=f"Training Epoch {epoch+1}")
@@ -258,18 +263,21 @@ if __name__ == "__main__":
         print(f"Epoch {epoch+1} complete. Average Training Loss: {avg_train_loss}")
         wandb.log({"epoch": epoch+1, "train/loss": avg_train_loss})
 
-        # Evaluation loop (calculates loss)
+        # --- Evaluation loop (calculates loss and logs image predictions) ---
         model.eval()
         total_eval_loss = 0
+        logged_eval_batch = False # <-- Flag to log only the first batch per epoch
+        
         with torch.no_grad():
             eval_iter = tqdm(eval_loader, desc=f"Evaluating Epoch {epoch+1}")
             for batch in eval_iter:
-                # <-- FIX: Pass all required inputs to the model
                 pixel_values = batch['pixel_values'].to(device)
                 input_ids = batch['input_ids'].to(device)
                 attention_mask = batch['attention_mask'].to(device)
                 main_labels = batch['main_labels'].to(device)
                 collision_object_ids = batch['collision_object_ids'].to(device)
+                prompts = batch['prompts']
+                image_paths_list = batch['image_paths']
 
                 main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
 
@@ -285,6 +293,44 @@ if __name__ == "__main__":
                     total_loss = main_loss
                 
                 total_eval_loss += total_loss.item()
+
+                # --- NEW WANDB IMAGE LOGGING ---
+                if not logged_eval_batch:
+                    main_preds = torch.argmax(main_logits, dim=1)
+                    collision_preds = torch.argmax(collision_logits, dim=1)
+                    
+                    # Create a table for logging
+                    eval_table = wandb.Table(columns=[
+                        "Epoch", "Image", "Prompt", 
+                        "Predicted Class", "Target Class",
+                        "Predicted Collision", "Target Collision"
+                    ])
+                    
+                    for i in range(len(prompts)):
+                        # Re-create the concatenated image
+                        # We use the full 'dataset' instance created in the main block
+                        pil_image = dataset.concatenate_images(image_paths_list[i])
+                        
+                        pred_class = inv_label_map.get(main_preds[i].item(), "N/A")
+                        target_class = inv_label_map.get(main_labels[i].item(), "N/A")
+                        
+                        pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
+                        target_coll = inv_collision_map.get(collision_object_ids[i].item(), "N/A")
+                        
+                        eval_table.add_data(
+                            epoch + 1,
+                            wandb.Image(pil_image),
+                            prompts[i],
+                            pred_class,
+                            target_class,
+                            pred_coll,
+                            target_coll
+                        )
+                        
+                    # Log the table to wandb
+                    wandb.log({"eval/predictions": eval_table, "epoch": epoch+1})
+                    logged_eval_batch = True # Ensure we only log the first batch
+                # --- END OF NEW LOGGING ---
 
         avg_eval_loss = total_eval_loss / len(eval_loader)
         print(f"Epoch {epoch+1} Evaluation Loss: {avg_eval_loss}")
