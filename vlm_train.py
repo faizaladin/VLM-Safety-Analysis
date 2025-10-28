@@ -286,11 +286,17 @@ if __name__ == "__main__":
                         pred_coll,
                         target_coll
                     )
-            wandb.log({"eval/predictions_table": eval_table, "epoch": epoch+1})
+            # <-- REMOVED: wandb.log call from here
 
         avg_eval_loss = total_eval_loss / len(eval_loader)
         print(f"Epoch {epoch+1} Evaluation Loss: {avg_eval_loss}")
-        wandb.log({"epoch": epoch+1, "eval/loss": avg_eval_loss})
+        
+        # <-- CHANGED: Combined all epoch-level logs into one call
+        wandb.log({
+            "epoch": epoch+1, 
+            "eval/loss": avg_eval_loss,
+            "eval/predictions_table": eval_table  # Log the populated table
+        })
     
     torch.save(model.state_dict(), "llava-finetuned-classification.pt")
     print("Training complete. Model saved to 'llava-finetuned-classification.pt'")
