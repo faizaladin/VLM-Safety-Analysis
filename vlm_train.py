@@ -238,7 +238,8 @@ if __name__ == "__main__":
             main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
             main_loss = criterion_main(main_logits, main_labels)
             collision_loss = criterion_collision(collision_logits, collision_object_ids)
-            total_loss = main_loss + collision_loss
+            collision_weight = 2.0  # You can adjust this value
+            total_loss = main_loss + collision_weight * collision_loss
             total_loss.backward()
             optimizer.step()
 
@@ -248,13 +249,16 @@ if __name__ == "__main__":
         avg_train_loss = total_train_loss / len(train_loader)
         wandb.log({"epoch": epoch + 1, "train/loss": avg_train_loss})
 
+        print(f"Epoch {epoch+1} Average Train Loss: {avg_train_loss}")
+
         # ============================================================
         # Evaluation Phase
         # ============================================================
         model.eval()
         total_eval_loss = 0
         columns = ["Epoch", "Prompt", "Pred Class", "Target Class", "Pred Collision", "Target Collision"]
-        eval_table = wandb.Table(columns=columns)
+        columns_with_image = columns + ["Image"]
+        eval_table = wandb.Table(columns=columns_with_image)
 
         with torch.no_grad():
             eval_iter = tqdm(eval_loader, desc=f"Evaluating Epoch {epoch+1}")
@@ -269,7 +273,8 @@ if __name__ == "__main__":
                 main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
                 main_loss = criterion_main(main_logits, main_labels)
                 collision_loss = criterion_collision(collision_logits, collision_object_ids)
-                total_loss = main_loss + collision_loss
+                collision_weight = 2.0  # Use same weight as training
+                total_loss = main_loss + collision_weight * collision_loss
                 total_eval_loss += total_loss.item()
 
                 main_preds = torch.argmax(main_logits, dim=1)
@@ -281,13 +286,23 @@ if __name__ == "__main__":
                     target_class = inv_label_map.get(main_labels[i].item(), "N/A")
                     pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
                     target_coll = inv_collision_map.get(collision_object_ids[i].item(), "N/A")
+                    # Get image paths for this sample
+                    image_paths = batch['image_paths'][i]
+                    # Reuse the concatenate_images function from the dataset
+                    concat_img = None
+                    try:
+                        concat_img = LlavaSequenceClassificationDataset.concatenate_images(None, image_paths)
+                    except Exception as e:
+                        concat_img = None
+                    wandb_image = wandb.Image(concat_img) if concat_img is not None else None
                     eval_table.add_data(
                         int(epoch + 1),
                         prompt_clean,
                         str(pred_class),
                         str(target_class),
                         str(pred_coll),
-                        str(target_coll)
+                        str(target_coll),
+                        wandb_image
                     )
 
         print(f"Eval table has {len(eval_table.data)} rows")
@@ -299,6 +314,7 @@ if __name__ == "__main__":
             wandb.log({"eval/predictions_table": eval_table})
 
         print(f"Epoch {epoch+1} Evaluation Loss: {avg_eval_loss}")
+    print(f"Epoch {epoch+1} Average Eval Loss: {avg_eval_loss}")
 
     torch.save(model.state_dict(), "llava-finetuned-classification.pt")
     wandb.finish()
