@@ -237,9 +237,17 @@ if __name__ == "__main__":
 
             main_logits, collision_logits = model(pixel_values, input_ids, attention_mask)
             main_loss = criterion_main(main_logits, main_labels)
-            collision_loss = criterion_collision(collision_logits, collision_object_ids)
-            collision_weight = 2.0  # You can adjust this value
-            total_loss = main_loss + collision_weight * collision_loss
+            # Only use collision loss when target is collision
+            collision_mask = (main_labels == dataset.label_map["collision"])
+            if collision_mask.any():
+                # Only compute collision loss for relevant samples
+                filtered_collision_logits = collision_logits[collision_mask]
+                filtered_collision_object_ids = collision_object_ids[collision_mask]
+                collision_loss = criterion_collision(filtered_collision_logits, filtered_collision_object_ids)
+                collision_weight = 2.0  # You can adjust this value
+                total_loss = main_loss + collision_weight * collision_loss
+            else:
+                total_loss = main_loss
             total_loss.backward()
 
             # Compute and print gradient norm
@@ -294,7 +302,11 @@ if __name__ == "__main__":
                     prompt_clean = str(prompts[i]).replace("\n", " ")[:300]
                     pred_class = inv_label_map.get(main_preds[i].item(), "N/A")
                     target_class = inv_label_map.get(main_labels[i].item(), "N/A")
-                    pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
+                    # If model predicts success or lane violation, set pred_coll to N/A
+                    if pred_class in ["success", "lane violation"]:
+                        pred_coll = "N/A"
+                    else:
+                        pred_coll = inv_collision_map.get(collision_preds[i].item(), "N/A")
                     target_coll = inv_collision_map.get(collision_object_ids[i].item(), "N/A")
                     # Get image paths for this sample
                     image_paths = batch['image_paths'][i]
