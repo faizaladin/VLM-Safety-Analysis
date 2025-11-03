@@ -135,11 +135,17 @@ if __name__ == "__main__":
     json_path = "llava_input.json"
     model_id = "llava-hf/llava-1.5-7b-hf"
 
-    print("Using full precision (fp16/fp32), no quantization.")
-    quantization_config = None
+    # Enable 8-bit quantization for lower memory usage
+    from transformers import BitsAndBytesConfig
+    print("Using 8-bit quantization.")
+    quantization_config = BitsAndBytesConfig(
+        load_in_8bit=True,
+        bnb_8bit_compute_dtype=torch.float16,
+    )
 
     base_model = LlavaForConditionalGeneration.from_pretrained(
     model_id,
+    quantization_config=quantization_config,
     device_map="auto",
     )
 
