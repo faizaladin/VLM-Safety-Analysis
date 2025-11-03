@@ -233,6 +233,18 @@ if __name__ == "__main__":
         train_iter = tqdm(train_loader, desc=f"Training Epoch {epoch+1}")
         total_train_loss = 0
         for batch in train_iter:
+            import math
+            # Check for NaN/Inf in loss and logits
+            if math.isnan(total_loss.item()) or math.isinf(total_loss.item()):
+                print(f"Warning: total_loss is nan or inf ({total_loss.item()})")
+                print(f"main_loss: {main_loss}")
+                print(f"main_logits: {main_logits}")
+                print(f"input_ids: {input_ids}")
+                print(f"pixel_values: {pixel_values}")
+                continue
+            if (main_logits.isnan().any() or main_logits.isinf().any()):
+                print("Warning: main_logits contain nan or inf")
+                continue
             optimizer.zero_grad()
             pixel_values = batch['pixel_values'].to(device)
             input_ids = batch['input_ids'].to(device)
