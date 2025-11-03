@@ -9,7 +9,7 @@ from tqdm import tqdm
 import wandb
 import torch.nn as nn
 import os
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 from sklearn.metrics import precision_recall_fscore_support
 
 # ============================================================
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     )
     criterion_main = nn.CrossEntropyLoss()
     criterion_collision = nn.CrossEntropyLoss()
-    scaler = GradScaler()
+    scaler = GradScaler('cuda')
 
     train_loader = DataLoader(training_dataset, batch_size=training_args.per_device_train_batch_size, shuffle=True, collate_fn=sequence_classification_collate_fn)
     eval_loader = DataLoader(validation_dataset, batch_size=training_args.per_device_eval_batch_size, shuffle=False, collate_fn=sequence_classification_collate_fn)
@@ -239,7 +239,7 @@ if __name__ == "__main__":
             attention_mask = batch['attention_mask'].to(device)
             main_labels = batch['main_labels'].to(device)
 
-            with autocast():
+            with autocast('cuda'):
                 main_logits, _ = model(pixel_values, input_ids, attention_mask)
                 main_loss = criterion_main(main_logits, main_labels)
                 total_loss = main_loss
