@@ -9,7 +9,6 @@ from tqdm import tqdm
 import wandb
 import torch.nn as nn
 import os
-from torch.amp import autocast, GradScaler
 from sklearn.metrics import precision_recall_fscore_support
 
 # ============================================================
@@ -28,7 +27,7 @@ class LlavaSequenceClassificationDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-    def concatenate_images(self, image_paths, resize=(112, 112)):
+    def concatenate_images(self, image_paths, resize=(224, 224)):
         images = [Image.open(p).convert("RGB").resize(resize) for p in image_paths[:self.num_frames]]
         if not images:
             return Image.new("RGB", resize, "white")
@@ -135,18 +134,16 @@ if __name__ == "__main__":
     json_path = "llava_input.json"
     model_id = "llava-hf/llava-1.5-7b-hf"
 
-    # Enable 8-bit quantization for lower memory usage
-    from transformers import BitsAndBytesConfig
-    print("Using 8-bit quantization.")
     quantization_config = BitsAndBytesConfig(
-        load_in_8bit=True,
-        bnb_8bit_compute_dtype=torch.float16,
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.float16,
     )
 
     base_model = LlavaForConditionalGeneration.from_pretrained(
-    model_id,
-    quantization_config=quantization_config,
-    device_map="auto",
+        model_id,
+        quantization_config=quantization_config,
+        device_map="auto",
     )
 
     processor = AutoProcessor.from_pretrained(model_id)
@@ -155,9 +152,9 @@ if __name__ == "__main__":
     base_model = prepare_model_for_kbit_training(base_model)
 
     lora_config = LoraConfig(
-        r=8,  # Lower rank for more stable gradients
-        lora_alpha=16,  # Lower alpha
-        target_modules=["q_proj", "v_proj"],
+        r=16,
+        lora_alpha=32,
+        target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
         lora_dropout=0.05,
         bias="none",
         task_type="CAUSAL_LM",
@@ -173,7 +170,7 @@ if __name__ == "__main__":
     collision_object_map = {obj: i for i, obj in enumerate(sorted_objects)}
     collision_object_map["N/A"] = len(sorted_objects)
 
-    dataset = LlavaSequenceClassificationDataset(json_path, processor, collision_object_map)
+    dataset = LlavaSequenceClassificationDataset(json_path, processor, collision_object_map, num_frames=50)
 
     indices = list(range(len(dataset)))
     np.random.shuffle(indices)
@@ -220,7 +217,6 @@ if __name__ == "__main__":
     )
     criterion_main = nn.CrossEntropyLoss()
     criterion_collision = nn.CrossEntropyLoss()
-    scaler = GradScaler('cuda')
 
     train_loader = DataLoader(training_dataset, batch_size=training_args.per_device_train_batch_size, shuffle=True, collate_fn=sequence_classification_collate_fn)
     eval_loader = DataLoader(validation_dataset, batch_size=training_args.per_device_eval_batch_size, shuffle=False, collate_fn=sequence_classification_collate_fn)
@@ -233,36 +229,15 @@ if __name__ == "__main__":
         train_iter = tqdm(train_loader, desc=f"Training Epoch {epoch+1}")
         total_train_loss = 0
         for batch in train_iter:
-            import math
-            # Check for NaN/Inf in loss and logits
-            if math.isnan(total_loss.item()) or math.isinf(total_loss.item()):
-                print(f"Warning: total_loss is nan or inf ({total_loss.item()})")
-                print(f"main_loss: {main_loss}")
-                print(f"main_logits: {main_logits}")
-                print(f"input_ids: {input_ids}")
-                print(f"pixel_values: {pixel_values}")
-                continue
-            if (main_logits.isnan().any() or main_logits.isinf().any()):
-                print("Warning: main_logits contain nan or inf")
-                continue
             optimizer.zero_grad()
             pixel_values = batch['pixel_values'].to(device)
             input_ids = batch['input_ids'].to(device)
             attention_mask = batch['attention_mask'].to(device)
             main_labels = batch['main_labels'].to(device)
-
-            with autocast('cuda'):
-                main_logits, _ = model(pixel_values, input_ids, attention_mask)
-                main_loss = criterion_main(main_logits, main_labels)
-                total_loss = main_loss
-
-
-            scaler.scale(total_loss).backward()
-
-            # Unscale gradients for clipping
-            scaler.unscale_(optimizer)
-            # Clip gradients to max norm 1.0
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            # Only use main loss
+            main_logits, _ = model(pixel_values, input_ids, attention_mask)
+            main_loss = criterion_main(main_logits, main_labels)
+            main_loss.backward()
 
             # Compute and print gradient norm
             total_norm = 0.0
@@ -273,11 +248,10 @@ if __name__ == "__main__":
             total_norm = total_norm ** 0.5
             print(f"Gradient norm: {total_norm:.4f}")
 
-            scaler.step(optimizer)
-            scaler.update()
+            optimizer.step()
 
-            total_train_loss += total_loss.item()
-            train_iter.set_postfix({"loss": total_loss.item()})
+            total_train_loss += main_loss.item()
+            train_iter.set_postfix({"loss": main_loss.item()})
 
         avg_train_loss = total_train_loss / len(train_loader)
         wandb.log({"epoch": epoch + 1, "train/loss": avg_train_loss})
@@ -306,8 +280,7 @@ if __name__ == "__main__":
 
                 main_logits, _ = model(pixel_values, input_ids, attention_mask)
                 main_loss = criterion_main(main_logits, main_labels)
-                total_loss = main_loss
-                total_eval_loss += total_loss.item()
+                total_eval_loss += main_loss.item()
 
                 main_preds = torch.argmax(main_logits, dim=1)
 
@@ -318,26 +291,21 @@ if __name__ == "__main__":
                     prompt_clean = str(prompts[i]).replace("\n", " ")[:300]
                     pred_class = inv_label_map.get(main_preds[i].item(), "N/A")
                     target_class = inv_label_map.get(main_labels[i].item(), "N/A")
-                    # Only log main class, collision columns set to N/A
-                    pred_coll = "N/A"
-                    target_coll = "N/A"
+                    # Remove collision predictions from eval table
                     image_paths = batch['image_paths'][i]
                     concat_img = None
                     try:
                         concat_img = LlavaSequenceClassificationDataset.concatenate_images(None, image_paths)
                     except Exception as e:
                         concat_img = None
-                    wandb_image = None
-                    if concat_img is not None:
-                        import numpy as np
-                        wandb_image = wandb.Image(np.array(concat_img))
+                    wandb_image = wandb.Image(concat_img) if concat_img is not None else None
                     eval_table.add_data(
                         int(epoch + 1),
                         prompt_clean,
                         str(pred_class),
                         str(target_class),
-                        str(pred_coll),
-                        str(target_coll),
+                        "N/A",  # pred_coll
+                        "N/A",  # target_coll
                         wandb_image
                     )
 
