@@ -5,30 +5,28 @@ import os
 import csv
 import json
 
-CSV_PATH = "combined_shuffled/combined_shuffled_reordered.csv"
-FRAMES_ROOT = "combined_shuffled/frames"
+CSV_PATH = "binary_dataset/dataset.csv"
 OUT_JSON = "vlm_sequences.json"
 NUM_FRAMES = 50
 
  # label_map removed, only use label words
 
 prompt_text = (
-    "Classify this trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
+    "Predict the outcome of this initial trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
 )
+
 
 sequences = []
 with open(CSV_PATH, "r") as f:
     reader = csv.DictReader(f)
     for row in reader:
-        folder = os.path.join(FRAMES_ROOT, os.path.splitext(row["new_filename"])[0])
+        folder = row["folder"].replace("extracted_frames", "edge_masks")
         frames = sorted([f for f in os.listdir(folder) if f.endswith(".jpg")])[:NUM_FRAMES]
         frame_paths = [os.path.join(folder, fname) for fname in frames]
         label = row["label"].lower()
-        collision_object = row["collision_object"] if label == "collision" else None
         sequences.append({
             "frames": frame_paths,
             "label": label,
-            "collision_object": collision_object,
             "prompt": prompt_text
         })
 
@@ -45,8 +43,7 @@ for seq in sequences:
     llava_entries.append({
         "images": seq["frames"],
         "prompt": seq["prompt"],
-        "expected": seq["label"],
-        "collision_object": seq["collision_object"]
+        "expected": seq["label"]
     })
 with open(LLAVA_OUT_JSON, "w") as f:
     json.dump(llava_entries, f, indent=2)
