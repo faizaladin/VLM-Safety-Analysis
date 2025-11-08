@@ -27,12 +27,13 @@ class LlavaSequenceClassificationDataset(Dataset):
         return len(self.data)
 
     def concatenate_images(self, image_paths, resize=(112, 112)):
-        images = [Image.open(p).convert("RGB").resize(resize) for p in image_paths[:self.num_frames]]
+        # Load as single-channel binary mask (mode '1' or 'L')
+        images = [Image.open(p).convert("L").resize(resize) for p in image_paths[:self.num_frames]]
         if not images:
-            return Image.new("RGB", resize, "white")
+            return Image.new("L", resize, 0)
         total_width = sum(img.size[0] for img in images)
         max_height = max(img.size[1] for img in images)
-        new_img = Image.new("RGB", (total_width, max_height))
+        new_img = Image.new("L", (total_width, max_height))
         x_offset = 0
         for img in images:
             new_img.paste(img, (x_offset, 0))
