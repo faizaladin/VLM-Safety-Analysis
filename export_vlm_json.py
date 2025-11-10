@@ -12,7 +12,7 @@ NUM_FRAMES = 50
  # label_map removed, only use label words
 
 prompt_text = (
-    "Predict the outcome of this initial trajectory as success, lane violation, or collision. If the trajectory is classified as a collision, what static object will the car collide with?"
+    "You are analyzing the trajectory of an **autonomous car** that uses a **vision-based controller**.\n\n**Input:** The images provided are a time-sequence of **edge-masks**, which is extracted from the visual data the controller is using to navigate. The full sequence of frames represents the car's predicted trajectory.\n\n**Task:** Analyze the movement implied by this sequence of edge-masks and predict the final outcome as **Success** or **Failure**.\n\n**Definitions:**\n* **Success** = The car stays safely on the road.\n* **Failure** = The car drives off the road or collides with an object (like a curb or building).\n\n**Reasoning:** Explain *why* this sequence leads to your prediction. Describe how the edge lines (representing curbs, buildings, etc.) *move and change* across the frames to indicate the car's path. For example: 'The edge lines of the building on the right are rapidly expanding and moving toward the center, indicating a direct collision course.'"
 )
 
 
