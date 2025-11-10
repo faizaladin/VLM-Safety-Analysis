@@ -109,7 +109,7 @@ if __name__ == "__main__":
                 pixel_values=pixel_values,
                 input_ids=input_ids,
                 attention_mask=attention_mask,
-                max_new_tokens=64
+                max_new_tokens=500
             )
             gen_text = processor.batch_decode(gen_ids, skip_special_tokens=True)[0]
             print(f"Trajectory {traj_idx}: Predicted class = {label_map[pred]}")
