@@ -45,13 +45,6 @@ class LlavaSequenceClassificationDataset(Dataset):
         image_paths = item['images']
         concat_img = self.concatenate_images(image_paths)
 
-        # Convert to numpy array and ensure single channel
-        concat_np = np.array(concat_img)
-        if concat_np.ndim == 2:
-            concat_np = np.expand_dims(concat_np, axis=-1)  # (H, W, 1)
-        # Convert back to PIL Image in 'L' mode
-        concat_img = Image.fromarray(concat_np.squeeze(-1), mode='L')
-
         prompt = f"USER: <image>\n{item['prompt']} ASSISTANT:"
 
         # Map collision and lane violation to 'failure'
@@ -61,8 +54,7 @@ class LlavaSequenceClassificationDataset(Dataset):
         else:
             main_label = self.label_map["failure"]
 
-        # Pass image_size to processor if available
-        processor_kwargs = dict(
+        inputs = self.processor(
             text=prompt,
             images=concat_img,
             return_tensors="pt",
@@ -70,18 +62,9 @@ class LlavaSequenceClassificationDataset(Dataset):
             max_length=1024,
             truncation=True
         )
-        if hasattr(self.processor, 'image_size'):
-            processor_kwargs['image_size'] = concat_img.size  # (W, H)
-
-        inputs = self.processor(**processor_kwargs)
-
-        # If processor still returns 3 channels, keep only the first channel
-        pixel_values = inputs['pixel_values'].squeeze(0)
-        if pixel_values.ndim == 3 and pixel_values.shape[0] == 3:
-            pixel_values = pixel_values[:1, :, :]  # Keep only first channel
 
         return {
-            'pixel_values': pixel_values,
+            'pixel_values': inputs['pixel_values'].squeeze(0),
             'input_ids': inputs['input_ids'].squeeze(0),
             'attention_mask': inputs['attention_mask'].squeeze(0),
             'main_label': torch.tensor(main_label, dtype=torch.long),
