@@ -107,16 +107,9 @@ if __name__ == "__main__":
         if item['images']:
             img_to_label[item['images'][0]] = 0 if item['expected'] == "success" else 1
 
-    # Load finetuned model
-    finetuned_model = LlavaClassificationHead(base_model, num_main_classes=2)
-    finetuned_model.load_state_dict(torch.load("llava-finetuned-classification.pt", map_location=device))
-    finetuned_model.eval()
-    finetuned_model.to(device)
-
-    # Evaluate both base and finetuned models
+    # Evaluate only base model
     true_labels = []
     base_pred_labels = []
-    finetuned_pred_labels = []
 
     for traj_idx, image_paths in enumerate(eval_trajectories):
         concat_img = dataset.concatenate_images(image_paths)
@@ -141,7 +134,6 @@ if __name__ == "__main__":
         gt = img_to_label.get(image_paths[0], 1)
         true_labels.append(gt)
 
-        # Base model prediction (text only)
         with torch.no_grad():
             gen_ids = base_model.generate(
                 pixel_values=pixel_values,
@@ -153,22 +145,9 @@ if __name__ == "__main__":
             base_pred = infer_label_from_text(gen_text)
             base_pred_labels.append(base_pred)
 
-        # Finetuned model prediction (classification head)
-        with torch.no_grad():
-            logits, _ = finetuned_model(pixel_values, input_ids, attention_mask)
-            finetuned_pred = torch.argmax(logits, dim=1).item()
-            finetuned_pred_labels.append(finetuned_pred)
+        print(f"Trajectory {traj_idx}: GT = {label_map[gt]}, Base Pred = {label_map[base_pred]}, Text = {gen_text}")
 
-        print(f"Trajectory {traj_idx}: GT = {label_map[gt]}, Base Pred = {label_map[base_pred]}, Finetuned Pred = {label_map[finetuned_pred]}, Text = {gen_text}")
-
-    # Metrics for base model
     base_precision, base_recall, base_f1, _ = precision_recall_fscore_support(true_labels, base_pred_labels, average='macro', zero_division=0)
     print(f"\nBase Model - Precision: {base_precision:.4f}")
     print(f"Base Model - Recall: {base_recall:.4f}")
     print(f"Base Model - F1 Score: {base_f1:.4f}")
-
-    # Metrics for finetuned model
-    finetuned_precision, finetuned_recall, finetuned_f1, _ = precision_recall_fscore_support(true_labels, finetuned_pred_labels, average='macro', zero_division=0)
-    print(f"\nFinetuned Model - Precision: {finetuned_precision:.4f}")
-    print(f"Finetuned Model - Recall: {finetuned_recall:.4f}")
-    print(f"Finetuned Model - F1 Score: {finetuned_f1:.4f}")
