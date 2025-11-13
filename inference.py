@@ -47,7 +47,7 @@ indices = np.linspace(0, total_frames - 1, 20).astype(int)
 video = read_video_pyav(container, indices)
 
 # For better results, we recommend to prompt the model in the following format
-prompt = "USER: <video>\nThis is a sequence of edge-masks from an autonomous car's vision controller. This sequence *is* the trajectory.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the edge lines (curbs, buildings) move. ASSISTANT:"
+prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading and what it might collide with. ASSISTANT:"
 inputs = processor(text=prompt, videos=video, return_tensors="pt")
 
 out = model.generate(**inputs, max_new_tokens=60)
