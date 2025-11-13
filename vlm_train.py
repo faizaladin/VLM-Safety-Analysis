@@ -10,6 +10,7 @@ from transformers import VideoLlavaForConditionalGeneration, VideoLlavaProcessor
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 import json
 import av
+import tqdm
 
 # --- Dataset ---
 
@@ -158,6 +159,7 @@ def main():
 		epoch_losses = []
 		all_preds = []
 		all_labels = []
+		train_iter = tqdm(train_loader, desc=f"Epoch {epoch+1} [Train]", leave=False)
 		for batch in train_loader:
 			# Use the correct key for video tensor
 			labels = batch['label'].to(model.device)
@@ -178,6 +180,7 @@ def main():
 			epoch_losses.append(loss.item())
 			all_preds.extend(preds.cpu().numpy())
 			all_labels.extend(labels.cpu().numpy())
+			train_iter.set_postfix(loss=loss.item())
 			# Log batch loss
 			wandb.log({"train/batch_loss": loss.item()})
 		train_losses.append(np.mean(epoch_losses))
@@ -201,6 +204,7 @@ def main():
 		eval_preds = []
 		eval_labels = []
 		with torch.no_grad():
+			eval_iter = tqdm(eval_loader, desc=f"Epoch {epoch+1} [Eval]", leave=False)
 			for batch in eval_loader:
 				# Use the correct key for video tensor
 				labels = batch['label'].to(model.device)
@@ -218,6 +222,7 @@ def main():
 				eval_epoch_losses.append(loss.item())
 				eval_preds.extend(preds.cpu().numpy())
 				eval_labels.extend(labels.cpu().numpy())
+				eval_iter.set_postfix(loss=loss.item())
 		eval_losses.append(np.mean(eval_epoch_losses))
 		eval_precision, eval_recall, eval_f1, _ = precision_recall_fscore_support(eval_labels, eval_preds, average='binary', zero_division=0)
 		eval_acc = accuracy_score(eval_labels, eval_preds)
