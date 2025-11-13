@@ -222,7 +222,10 @@ def main():
 		})
 		print(f"Epoch {epoch+1} Train Loss: {train_losses[-1]:.4f} Eval Loss: {eval_losses[-1]:.4f} Train F1: {f1:.4f} Eval F1: {eval_f1:.4f}")
 
-	print("Training complete.")
+
+	# Save the trained model
+	torch.save(model.state_dict(), "vlm_model.pth")
+	print("Training complete. Model saved as vlm_model.pth.")
 
 if __name__ == "__main__":
 	main()
