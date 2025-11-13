@@ -70,7 +70,7 @@ def main():
 	wandb.init(project="vlm-binary-classification", name="vlm-train-run")
 	# Configs
 	metadata_json = 'vlm_data/metadata.json'
-	batch_size = 8
+	batch_size = 4
 	num_epochs = 15
 	lr = 1e-5
 	num_frames = 15
