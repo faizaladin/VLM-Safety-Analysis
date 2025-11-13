@@ -43,7 +43,7 @@ processor = VideoLlavaProcessor.from_pretrained("LanguageBind/Video-LLaVA-7B-hf"
 video_path = "vlm_data/town 2_town2_rainy_collision_run_8.mp4"  # Use your local path
 container = av.open(video_path)
 total_frames = container.streams.video[0].frames
-indices = np.linspace(0, total_frames - 1, 10).astype(int)
+indices = np.linspace(0, total_frames - 1, 16).astype(int)
 video = read_video_pyav(container, indices)
 
 # For better results, we recommend to prompt the model in the following format
@@ -56,5 +56,5 @@ for k, v in inputs.items():
     if isinstance(v, torch.Tensor):
         inputs[k] = v.to(device)
 
-out = model.generate(**inputs, max_new_tokens=60)
+out = model.generate(**inputs, max_new_tokens=200)
 print(processor.batch_decode(out, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
