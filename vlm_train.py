@@ -155,14 +155,9 @@ def main():
 		all_preds = []
 		all_labels = []
 		for batch in train_loader:
-			print("Batch keys:", batch.keys())  # Debug print to find the correct video key
+			# Use the correct key for video tensor
 			labels = batch['label'].to(model.device)
-			# Try both possible keys for video tensor
-			video_tensor = batch.get('videos')
-			if video_tensor is None:
-				video_tensor = batch.get('pixel_values')
-			if video_tensor is None:
-				raise KeyError("No video tensor found in batch. Available keys: {}".format(list(batch.keys())))
+			video_tensor = batch['pixel_values_videos']
 			outputs = model(
 				input_ids=batch['input_ids'].squeeze(1).to(model.device),
 				attention_mask=batch['attention_mask'].squeeze(1).to(model.device),
@@ -203,13 +198,9 @@ def main():
 		eval_labels = []
 		with torch.no_grad():
 			for batch in eval_loader:
-				print("Eval batch keys:", batch.keys())  # Debug print to find the correct video key
+				# Use the correct key for video tensor
 				labels = batch['label'].to(model.device)
-				video_tensor = batch.get('videos')
-				if video_tensor is None:
-					video_tensor = batch.get('pixel_values')
-				if video_tensor is None:
-					raise KeyError("No video tensor found in eval batch. Available keys: {}".format(list(batch.keys())))
+				video_tensor = batch['pixel_values_videos']
 				outputs = model(
 					input_ids=batch['input_ids'].squeeze(1).to(model.device),
 					attention_mask=batch['attention_mask'].squeeze(1).to(model.device),
