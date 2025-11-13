@@ -50,5 +50,11 @@ video = read_video_pyav(container, indices)
 prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading and what it might collide with. ASSISTANT:"
 inputs = processor(text=prompt, videos=video, return_tensors="pt")
 
+# Move all tensors to the same device as the model
+device = model.device if hasattr(model, 'device') else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+for k, v in inputs.items():
+    if isinstance(v, torch.Tensor):
+        inputs[k] = v.to(device)
+
 out = model.generate(**inputs, max_new_tokens=60)
 print(processor.batch_decode(out, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
