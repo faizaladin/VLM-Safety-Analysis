@@ -620,15 +620,7 @@
     "source_folder": "success",
     "original_video": "Combined Data/town 2/town2_sunny/success/run_55.mp4"
   },
-  {
-    "video": "vlm_data/town 2_town2_sunny_success_run_1.mp4",
-    "label": "success",
-    "csv_label": null,
-    "town": "town 2",
-    "weather": "town2_sunny",
-    "source_folder": "success",
-    "original_video": "Combined Data/town 2/town2_sunny/success/run_1.mp4"
-  },
+
   {
     "video": "vlm_data/town 2_town2_sunny_success_run_26.mp4",
     "label": "success",
