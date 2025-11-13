@@ -12,10 +12,15 @@ import json
 import av
 
 # --- Dataset ---
+
 class VideoClassificationDataset(Dataset):
-	def __init__(self, metadata_json, processor, num_frames=15):
-		with open(metadata_json, 'r') as f:
-			self.metadata = json.load(f)
+	def __init__(self, metadata, processor, num_frames=15):
+		# metadata can be a list (already loaded) or a path to a JSON file
+		if isinstance(metadata, str):
+			with open(metadata, 'r') as f:
+				self.metadata = json.load(f)
+		else:
+			self.metadata = metadata
 		self.processor = processor
 		self.num_frames = num_frames
 
@@ -81,10 +86,9 @@ def main():
 		json.dump(eval_metadata, f, indent=2)
 
 	# Datasets
-	train_dataset = VideoClassificationDataset(None, processor, num_frames=num_frames)
-	train_dataset.metadata = train_metadata
-	eval_dataset = VideoClassificationDataset(None, processor, num_frames=num_frames)
-	eval_dataset.metadata = eval_metadata
+
+	train_dataset = VideoClassificationDataset(train_metadata, processor, num_frames=num_frames)
+	eval_dataset = VideoClassificationDataset(eval_metadata, processor, num_frames=num_frames)
 
 	train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 	eval_loader = DataLoader(eval_dataset, batch_size=batch_size, shuffle=False)
