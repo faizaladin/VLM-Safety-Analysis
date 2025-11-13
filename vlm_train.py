@@ -11,6 +11,7 @@ from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 import json
 import av
 import tqdm
+from tqdm.auto import tqdm
 
 # --- Dataset ---
 
