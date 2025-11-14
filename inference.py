@@ -1,4 +1,6 @@
-
+# Batch inference over all videos in evaluation_trajectories.json
+import json
+import os
 import av
 import torch
 import numpy as np
@@ -39,22 +41,44 @@ model = VideoLlavaForConditionalGeneration.from_pretrained(
 processor = VideoLlavaProcessor.from_pretrained("LanguageBind/Video-LLaVA-7B-hf")
 
 
-# Load the video as an np.array, sampling uniformly 20 frames
-video_path = "vlm_data/town 2_town2_rainy_collision_run_8.mp4"  # Use your local path
-container = av.open(video_path)
-total_frames = container.streams.video[0].frames
-indices = np.linspace(0, total_frames - 1, 15).astype(int)
-video = read_video_pyav(container, indices)
 
-# For better results, we recommend to prompt the model in the following format
-prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading and what it might collide with. ASSISTANT:"
-inputs = processor(text=prompt, videos=video, return_tensors="pt")
+# Load video paths
+with open("evaluation_trajectories.json", "r") as f:
+    video_paths = json.load(f)
 
-# Move all tensors to the same device as the model
-device = model.device if hasattr(model, 'device') else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-for k, v in inputs.items():
-    if isinstance(v, torch.Tensor):
-        inputs[k] = v.to(device)
+# Load ground truth labels from metadata.json
+with open("vlm_data/metadata.json", "r") as f:
+    metadata = json.load(f)
+video_to_label = {item["video"]: item["label"] for item in metadata}
 
-out = model.generate(**inputs, max_new_tokens=200)
-print(processor.batch_decode(out, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0])
+def get_ground_truth_label(video_path):
+    # Use metadata mapping
+    return video_to_label.get(video_path, None)
+
+results = []
+for video_path in video_paths:
+    print(f"Processing: {video_path}")
+    if not os.path.exists(video_path):
+        print(f"Missing: {video_path}")
+        continue
+    try:
+        container = av.open(video_path)
+        total_frames = container.streams.video[0].frames
+        indices = np.linspace(0, total_frames - 1, 20).astype(int)
+        video = read_video_pyav(container, indices)
+        video = np.transpose(video, (0, 3, 1, 2))  # (num_frames, C, H, W)
+        prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading, weather, and objects the car might collide with. ASSISTANT:"
+        inputs = processor(text=prompt, videos=video, return_tensors="pt")
+        device = model.device if hasattr(model, 'device') else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        for k, v in inputs.items():
+            if isinstance(v, torch.Tensor):
+                inputs[k] = v.to(device)
+        out = model.generate(**inputs, max_new_tokens=200)
+        decoded = processor.batch_decode(out, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+        results.append({"video": video_path, "output": decoded})
+        print(f"{video_path}: {decoded}")
+    except Exception as e:
+        print(f"Error processing {video_path}: {e}")
+
+with open("inference_results.json", "w") as f:
+    json.dump(results, f, indent=2)
