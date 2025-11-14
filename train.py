@@ -230,6 +230,7 @@ def main():
 				eval_labels.extend(labels.cpu().numpy())
 				eval_iter.set_postfix(batch=i, loss=loss.item())
 				eval_iter.set_postfix(batch=i, loss=loss.item())
+		eval_losses.append(np.mean(eval_epoch_losses))
 		eval_precision, eval_recall, eval_f1, _ = precision_recall_fscore_support(eval_labels, eval_preds, average='binary', zero_division=0)
 		eval_acc = accuracy_score(eval_labels, eval_preds)
 		eval_precisions.append(eval_precision)
