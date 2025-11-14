@@ -77,7 +77,7 @@ for video_path in video_paths:
     try:
         container = av.open(video_path)
         total_frames = container.streams.video[0].frames
-        indices = np.linspace(0, total_frames - 1, 20).astype(int)
+        indices = np.linspace(0, total_frames - 1, 8).astype(int)
         video = read_video_pyav(container, indices)
         video = np.transpose(video, (0, 3, 1, 2))  # (num_frames, C, H, W)
         prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading, weather, and objects the car might collide with. ASSISTANT:"
@@ -86,7 +86,7 @@ for video_path in video_paths:
         for k, v in inputs.items():
             if isinstance(v, torch.Tensor):
                 inputs[k] = v.to(device)
-        out = model.generate(**inputs, max_new_tokens=200)
+        out = model.generate(**inputs, max_new_tokens=500)
         decoded = processor.batch_decode(out, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
         gt_label = get_ground_truth_label(video_path)
         pred_label = get_predicted_label(decoded)
