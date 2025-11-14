@@ -16,7 +16,7 @@ from tqdm.auto import tqdm
 # --- Dataset ---
 
 class VideoClassificationDataset(Dataset):
-	def __init__(self, metadata, processor, num_frames=15):
+	def __init__(self, metadata, processor, num_frames=8):
 		# metadata can be a list (already loaded) or a path to a JSON file
 		if isinstance(metadata, str):
 			with open(metadata, 'r') as f:
@@ -47,7 +47,7 @@ class VideoClassificationDataset(Dataset):
 		video = self.read_video_pyav(item['video'])  # (num_frames, H, W, C)
 		# Rearrange to (num_frames, C, H, W)
 		video = np.transpose(video, (0, 3, 1, 2))
-		prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading and what it might collide with. ASSISTANT:"
+		prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading, weather, and objects the car might collide with. ASSISTANT:"
 		inputs = self.processor(text=prompt, videos=video, return_tensors="pt")
 		# Remove batch dimension from processor outputs
 		inputs = {k: v.squeeze(0) if isinstance(v, torch.Tensor) and v.dim() > 0 and v.shape[0] == 1 else v for k, v in inputs.items()}
@@ -73,7 +73,7 @@ def main():
 	batch_size = 2
 	num_epochs = 15
 	lr = 1e-5
-	num_frames = 15
+	num_frames = 8
 
 	# Processor
 	processor = VideoLlavaProcessor.from_pretrained("LanguageBind/Video-LLaVA-7B-hf")
