@@ -24,3 +24,4 @@ conda activate myenv
 4. Evaluate on unseen trajectories
 <pre>python inference.py </pre>
 
+## Results
