@@ -16,3 +16,4 @@ conda activate myenv
 </pre>
 
 2. Fine-Tune LlaVa 1.5
+<pre>python train.py</pre>
