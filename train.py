@@ -13,11 +13,9 @@ import av
 import tqdm
 from tqdm.auto import tqdm
 
-# --- Dataset ---
 
 class VideoClassificationDataset(Dataset):
 	def __init__(self, metadata, processor, num_frames=8):
-		# metadata can be a list (already loaded) or a path to a JSON file
 		if isinstance(metadata, str):
 			with open(metadata, 'r') as f:
 				self.metadata = json.load(f)
@@ -44,27 +42,22 @@ class VideoClassificationDataset(Dataset):
 
 	def __getitem__(self, idx):
 		item = self.metadata[idx]
-		video = self.read_video_pyav(item['video'])  # (num_frames, H, W, C)
-		# Rearrange to (num_frames, C, H, W)
+		video = self.read_video_pyav(item['video'])  
 		video = np.transpose(video, (0, 3, 1, 2))
 		prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading, weather, and objects the car might collide with. ASSISTANT:"
 		inputs = self.processor(text=prompt, videos=video, return_tensors="pt")
-		# Remove batch dimension from processor outputs
 		inputs = {k: v.squeeze(0) if isinstance(v, torch.Tensor) and v.dim() > 0 and v.shape[0] == 1 else v for k, v in inputs.items()}
 		label = 1 if item['label'] == 'success' else 0
 		return {**inputs, 'label': torch.tensor(label, dtype=torch.long)}
 
-# --- Classification Head ---
 class ClassificationHead(nn.Module):
 	def __init__(self, hidden_size):
 		super().__init__()
 		self.fc = nn.Linear(hidden_size, 2)
 
 	def forward(self, x):
-		# x: (batch, seq_len, hidden_size) -> use [CLS] token or mean pooling
 		return self.fc(x[:, 0, :])
 
-# --- Training Setup ---
 def main():
 	# Initialize wandb
 	wandb.init(project="vlm-binary-classification", name="vlm-train-run")
@@ -93,11 +86,9 @@ def main():
 	with open('evaluation_trajectories.json', 'w') as f:
 		json.dump(eval_video_paths, f, indent=2)
 
-	# Save eval trajectories to JSON (original behavior)
+	# Save eval trajectories to JSON
 	with open('vlm_data/eval_trajectories.json', 'w') as f:
 		json.dump(eval_metadata, f, indent=2)
-
-	# Datasets
 
 	train_dataset = VideoClassificationDataset(train_metadata, processor, num_frames=num_frames)
 	eval_dataset = VideoClassificationDataset(eval_metadata, processor, num_frames=num_frames)
@@ -119,7 +110,7 @@ def main():
 		device_map="auto"
 	)
 
-	# Prepare for LoRA
+	# LoRA
 	model = prepare_model_for_kbit_training(model)
 	lora_config = LoraConfig(
 		r=8,
@@ -161,8 +152,6 @@ def main():
 	eval_f1s = []
 
 	for epoch in range(num_epochs):
-	# Save model at the end of each epoch
-		# Training
 		model.train()
 		epoch_losses = []
 		all_preds = []
@@ -245,7 +234,6 @@ def main():
 			"epoch": epoch+1
 		})
 	print(f"Epoch {epoch+1} Train Loss: {train_losses[-1]:.4f} Eval Loss: {eval_losses[-1]:.4f} Train F1: {f1:.4f} Eval F1: {eval_f1:.4f}")
-	# Save model at the end of each epoch
 	torch.save(model.state_dict(), f"vlm_model_epoch{epoch+1}.pth")
 
 
