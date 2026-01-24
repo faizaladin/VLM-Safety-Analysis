@@ -33,7 +33,7 @@ model = VideoLlavaForConditionalGeneration.from_pretrained(
 )
 processor = VideoLlavaProcessor.from_pretrained("LanguageBind/Video-LLaVA-7B-hf")
 
-# Classification head definition (same as train.py)
+# Classification head 
 class ClassificationHead(nn.Module):
     def __init__(self, hidden_size):
         super().__init__()
@@ -53,13 +53,12 @@ model.eval()
 with open("evaluation_trajectories.json", "r") as f:
     video_paths = json.load(f)
 
-# Load ground truth labels from metadata.json
+# Load ground truth labels 
 with open("vlm_data/metadata.json", "r") as f:
     metadata = json.load(f)
 video_to_label = {item["video"]: item["label"] for item in metadata}
 
 def get_ground_truth_label(video_path):
-    # Use metadata mapping
     return video_to_label.get(video_path, None)
 
 
@@ -81,7 +80,7 @@ for video_path in video_paths:
         total_frames = container.streams.video[0].frames
         indices = np.linspace(0, total_frames - 1, 8).astype(int)
         video = read_video_pyav(container, indices)
-        video = np.transpose(video, (0, 3, 1, 2))  # (num_frames, C, H, W)
+        video = np.transpose(video, (0, 3, 1, 2))  
         prompt = "USER: <video>\nThis is a video sequence from a car's vision controller. This sequence *is* the trajectory of the car.\n\nPredict: **Success** (stays on road) or **Failure** (off-road or collision).\n\nReasoning: Explain *why* based on how the where the car is heading, weather, and objects the car might collide with. ASSISTANT:"
         inputs = processor(text=prompt, videos=video, return_tensors="pt")
         device = model.device if hasattr(model, 'device') else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -107,7 +106,6 @@ for video_path in video_paths:
     except Exception as e:
         print(f"Error processing {video_path}: {e}")
 
-# Compute binary metrics
 def compute_metrics(y_true, y_pred):
     tp = sum((yt == 'success') and (yp == 'success') for yt, yp in zip(y_true, y_pred))
     fp = sum((yt != 'success') and (yp == 'success') for yt, yp in zip(y_true, y_pred))
