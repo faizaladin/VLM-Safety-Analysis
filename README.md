@@ -1,4 +1,4 @@
-# VLM Safety Analysis
+# Identifying Failure States in Autonomous Driving using VLMs 
 
 Faiz Aladin, Kaustav Chakraborty
 
