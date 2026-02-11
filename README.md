@@ -11,18 +11,25 @@ To collect data for the VLM finetuning, use this repository: https://github.com/
 ## How to Use
 
 1. Install the Conda Environment
-<pre>conda env create -f environment.yml
+```
+conda env create -f environment.yml
 conda activate myenv
-</pre>
+```
 
-2. After collecting the data from the repository above, you will need to format it.
-<pre>python format_data.py</pre>
+3. After collecting the data from the repository above, you will need to format it.
+```
+python format_data.py
+```
 
 3. Fine-Tune LlaVa-Video
-<pre>python train.py</pre>
+```
+python train.py
+```
 
 4. Evaluate on unseen trajectories
-<pre>python inference.py </pre>
+```
+python inference.py
+```
 
 ## Results
 
