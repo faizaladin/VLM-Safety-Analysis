@@ -1,6 +1,6 @@
 # Identifying Failure States in Autonomous Driving using VLMs 
 
-Faiz Aladin, Kaustav Chakraborty
+Kaustav Chakraborty, Faiz Aladin
 
 University of Southern California
 
