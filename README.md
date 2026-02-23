@@ -1,4 +1,4 @@
-# Identifying Failure States in Autonomous Driving using VLMs 
+# Reasoning About Closed-Loop Failures of Vision-Based Controllers: A VLM-based Approach for Failure Analysis and Causal Reasoning with Limited Supervision 
 
 Kaustav Chakraborty, Faiz Aladin
 
